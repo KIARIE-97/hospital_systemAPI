@@ -1,0 +1,30 @@
+@URL = http://localhost:3000
+
+###
+GET {{URL}}/patients
+
+###
+GET {{URL}}/patients/4
+
+###
+GET {{URL}}/patients/search?query=jane
+
+###
+POST {{URL}}/patients
+Content-Type: application/json
+
+{
+    "first_name": "JENY",
+    "last_name": "sara"
+}
+
+###
+PATCH {{URL}}/patients/4
+Content-Type: application/json
+
+{
+    "last_name": "Jane"
+}
+
+###
+DELETE {{URL}}/patients/2

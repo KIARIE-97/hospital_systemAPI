@@ -1,0 +1,33 @@
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { PatientsModule } from './patients/patients.module';
+import { DoctorsModule } from './doctors/doctors.module';
+import { AppointmentsModule } from './appointments/appointments.module';
+import { MedicalHistoriesModule } from './medical-histories/medical-histories.module';
+import { ContactQueriesModule } from './contact-queries/contact-queries.module';
+import { DoctorSessionlogsModule } from './doctor-sessionlogs/doctor-sessionlogs.module';
+import { PatientSessionlogsModule } from './patient-sessionlogs/patient-sessionlogs.module';
+import { LoggerMiddleware } from './logger.middleware';
+
+@Module({
+  imports: [
+    PatientsModule,
+    DoctorsModule,
+    AppointmentsModule,
+    MedicalHistoriesModule,
+    ContactQueriesModule,
+    DoctorSessionlogsModule,
+    PatientSessionlogsModule,
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {
+  configure( consumer: MiddlewareConsumer) {
+    consumer
+    .apply(LoggerMiddleware)
+    .exclude(
+      {path: 'patients/search', method:RequestMethod.GET},
+    )
+    .forRoutes('patients');
+  }
+}
