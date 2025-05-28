@@ -24,25 +24,25 @@ export class PatientsController {
   }
 
   @Get()
-  findAll() {
-    return this.patientsService.findAll();
+  findAll(@Query('name') name?: string) {
+    return this.patientsService.findAll(name);
   }
   @Get('search')
-  search(@Query('query') query: string): CreatePatientDto[] {
-    return this.patientsService.search(query.toLocaleLowerCase());
+  search() {
+    return ;
   }
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.patientsService.findOne(id);
+  findOne()  {
+    return ;
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePatientDto: UpdatePatientDto) {
-    return this.patientsService.update(id, updatePatientDto);
+  update(){
+    return ;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.patientsService.remove(+id);
+  remove () {
+    return ;
   }
 }

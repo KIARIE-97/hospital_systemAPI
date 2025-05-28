@@ -7,6 +7,9 @@ import { ContactQueriesModule } from './contact-queries/contact-queries.module';
 import { DoctorSessionlogsModule } from './doctor-sessionlogs/doctor-sessionlogs.module';
 import { PatientSessionlogsModule } from './patient-sessionlogs/patient-sessionlogs.module';
 import { LoggerMiddleware } from './logger.middleware';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +20,12 @@ import { LoggerMiddleware } from './logger.middleware';
     ContactQueriesModule,
     DoctorSessionlogsModule,
     PatientSessionlogsModule,
+    DatabaseModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    UsersModule,
   ],
   controllers: [],
   providers: [],

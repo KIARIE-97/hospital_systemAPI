@@ -1,7 +1,10 @@
-@URL = http://localhost:3000
+@URL = http://localhost:8000
 
 ###
 GET {{URL}}/patients
+
+###
+GET {{URL}}/users
 
 ###
 GET {{URL}}/patients/4
@@ -14,10 +17,26 @@ POST {{URL}}/patients
 Content-Type: application/json
 
 {
-    "first_name": "JENY",
-    "last_name": "sara"
+    "dob": "1992-01-01",
+    "gender": "male",
+    "address": "12 Main ",
+    "status": true,
+    "user_id": 1
 }
 
+###
+POST {{URL}}/users
+Content-Type: application/json
+
+{
+    "first_name": "john",
+    "last_name": "malek",
+    "email": "malek@gmail.com",
+    "password": "12345",
+    "phone_number": 13456,
+    "role": "patient",
+    "status": "active"
+}
 ###
 PATCH {{URL}}/patients/4
 Content-Type: application/json

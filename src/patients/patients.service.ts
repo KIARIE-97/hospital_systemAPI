@@ -1,66 +1,55 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Gender, Patient } from './entities/patient.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PatientsService {
-  private patients: CreatePatientDto[] = [];
+  constructor(
+    @InjectRepository(Patient) private patientRepository: Repository<Patient>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
-  create(createPatientDto: CreatePatientDto): CreatePatientDto {
-    const newPatient = {
-      id: createPatientDto.id || this.patients.length + 1,
-      first_name: createPatientDto.first_name,
-      last_name: createPatientDto.last_name,
-      // dob: createPatientDto.dob,
-      // email: createPatientDto.email,
-      // phone_number: createPatientDto.phone_number
-    };
-    this.patients.push(newPatient);
-    return newPatient;
-  }
+  async create(createPatientDto: CreatePatientDto) {
+ const existingUser = await this.userRepository.findOneBy({
+   id: createPatientDto.user_id,
+ })
+  
+ if (!existingUser) {
+   throw new NotFoundException(
+     `Profile with id ${createPatientDto.user_id} not found`,
+   );
+ }
+    const newPatient = this.patientRepository.create({
+      dob: createPatientDto.dob,
+      gender: createPatientDto.gender as Gender,
+      address: createPatientDto.address,
+      status: createPatientDto.status,
+      user: existingUser,
+    });
 
-  findAll(): CreatePatientDto[] {
-    return this.patients;
+    return this.patientRepository.save(newPatient);
   }
-  search(query: string): CreatePatientDto[] {
-    const foundPatient = this.patients.filter(
-      (p) =>
-        p.first_name.toLowerCase().includes(query.toLowerCase()) ||
-        p.last_name.toLowerCase().includes(query.toLowerCase()),
-    );
-    return foundPatient;
-  }
-  findOne(id: number): CreatePatientDto | undefined {
-    const foundPatient = this.patients.find((p) => p.id === id);
-    return foundPatient;
-  }
-
-  update(
-    id: number,
-    updatePatientDto: UpdatePatientDto,
-  ): UpdatePatientDto | string {
-    const patientIndex = this.patients.findIndex((p) => p.id === id);
-    if (patientIndex === -1) {
-      throw new InternalServerErrorException('Patient not found😥',{
-        cause: new Error(),
-        description: 'you do not have this patient id😪'
+  async findAll(name?: string): Promise<Patient[]> {
+    if (name) {
+      return await this.patientRepository.find({
+        where: {
+          user: {
+            first_name: name,
+          },
+        },
+        relations: {user: true},
       });
-      
     }
-    const updatedPatient = {
-      ...this.patients[patientIndex],
-      ...updatePatientDto,
-    };
-    this.patients[patientIndex] = updatedPatient;
-    return updatedPatient;
+    return await this.patientRepository.find({
+      relations: {user: true},
+    });
   }
 
-  remove(id: number): string {
-    const patientIndex = this.patients.findIndex((p) => p.id === id);
-    if (patientIndex === -1) {
-      return 'Patient not found';
-    }
-    this.patients.splice(patientIndex, 1);
-    return 'Patient removed successfully';
-  }
+  // async findAll(): Promise<Patient[]> {
+  //   return this.patientRepository.find();
+  // }
 }

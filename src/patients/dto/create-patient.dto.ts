@@ -6,28 +6,26 @@ import {
   IsDate,
   IsNumber,
   IsBoolean,
+  IsDateString,
+  IsEnum,
 } from 'class-validator';
+import { Gender } from '../entities/patient.entity';
 export class CreatePatientDto {
-  @IsNotEmpty()
+  @IsDateString()
+  dob: string;
+
+  @IsString()
+  @IsEnum(Gender, {
+    message: 'gender must be one of the following: male, female or other',
+  })
+  gender: Gender = Gender.UNDEFINED;
+
+  @IsString()
+  address: string;
+
+  @IsBoolean()
+  status: string;
+
   @IsNumber()
-  @IsOptional()
-  id: number;
-  @IsString()
-  first_name: string;
-  @IsString()
-  last_name: string;
-  //   @IsDate()
-  //   dob: Date;
-  //   @IsEmail()
-  //   email: string;
-  //   @IsNumber()
-  //   phone_number: number;
-  //   @IsString()
-  //   gender: string;
-  //   @IsString()
-  //   address: string;
-  //   @IsBoolean()
-  //   status: string;
-  //   @IsDate()
-  //   registration_date: Date;
+  user_id: number;
 }
