@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, Query, ParseIntPipe } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -12,29 +12,29 @@ export class AppointmentsController {
     return this.appointmentsService.create(createAppointmentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(Number(id));
-  }
-  @Get('search/:query')
-  search(@Param('query') query: string) {
-    return this.appointmentsService.search(query);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateAppointmentDto: UpdateAppointmentDto,
+  @Post(':appointment_id/doctor/:doctor_id')
+  addStudentToCourse(
+    @Param('appointment_id', ParseIntPipe) appointment_id: number,
+    @Param('doctor_id', ParseIntPipe) doctor_id: number,
   ) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
+    return this.appointmentsService.addAppointmentToDoctor(appointment_id, doctor_id);
   }
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(Number(id));
+  // @Get()
+  // findAll() {
+  //   return this.appointmentsService.findAll();
+  // }addAppointmentToDoctor
+
+  @Get()
+  findAll(@Query('search') search?: string) {
+    return this.appointmentsService.findAll(search);
   }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.appointmentsService.findOne(Number(id));
+  // }
+  // @Get('search/:query')
+  // search(@Param('query') query: string) {
+  //   return this.appointmentsService.search(query);
+  // }
 }

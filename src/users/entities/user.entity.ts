@@ -1,3 +1,4 @@
+import { Doctor } from "src/doctors/entities/doctor.entity";
 import { Patient } from "src/patients/entities/patient.entity";
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 
@@ -39,4 +40,7 @@ export class User {
 
   @OneToOne(() => Patient, (patient) => patient.user)
   patient: Relation<Patient>;
+
+  @OneToOne(() => Doctor, (doctor) => doctor.user)
+  doctor: Relation<Doctor>;
 }

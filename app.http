@@ -7,21 +7,29 @@ GET {{URL}}/patients
 GET {{URL}}/users
 
 ###
-GET {{URL}}/patients/4
+GET {{URL}}/doctors
+###
+GET {{URL}}/appointments
+
+###
+GET {{URL}}/patients/1
 
 ###
 GET {{URL}}/patients/search?query=jane
+
+### Enroll a student in another course (student id = 1, course id = 2)
+POST {{URL}}/doctors/2/appointment/7
 
 ###
 POST {{URL}}/patients
 Content-Type: application/json
 
 {
-    "dob": "1992-01-01",
-    "gender": "male",
-    "address": "12 Main ",
+    "dob": "1988-01-01",
+    "gender": "female",
+    "address": "12 kimathi street",
     "status": true,
-    "user_id": 1
+    "user_id": 2
 }
 
 ###
@@ -29,14 +37,36 @@ POST {{URL}}/users
 Content-Type: application/json
 
 {
-    "first_name": "john",
-    "last_name": "malek",
-    "email": "malek@gmail.com",
+    "first_name": "james",
+    "last_name": "kiarie",
+    "email": "jj@gmail.com",
     "password": "12345",
     "phone_number": 13456,
-    "role": "patient",
+    "role": "doctor",
     "status": "active"
 }
+
+###
+POST {{URL}}/doctors
+Content-Type: application/json
+
+{
+    "specialty": "surgeon",
+    "password": "123456",
+    "user_id": 4
+}
+###
+POST {{URL}}/appointments
+Content-Type: application/json
+
+{
+    "patient_id": 1,
+    "doctor_id": 1,
+    "appointment_date": "2024-10-01",
+    "status": "pending",
+    "reason": "severe heartburn"
+}
+
 ###
 PATCH {{URL}}/patients/4
 Content-Type: application/json

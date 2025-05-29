@@ -5,24 +5,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Gender, Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 
 @Injectable()
 export class PatientsService {
   constructor(
     @InjectRepository(Patient) private patientRepository: Repository<Patient>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Appointment)
+    private appointmentRepository: Repository<Appointment>,
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
- const existingUser = await this.userRepository.findOneBy({
-   id: createPatientDto.user_id,
- })
-  
- if (!existingUser) {
-   throw new NotFoundException(
-     `Profile with id ${createPatientDto.user_id} not found`,
-   );
- }
+    const existingUser = await this.userRepository.findOneBy({
+      id: createPatientDto.user_id,
+    });
+
+    if (!existingUser) {
+      throw new NotFoundException(
+        `Profile with id ${createPatientDto.user_id} not found`,
+      );
+    }
     const newPatient = this.patientRepository.create({
       dob: createPatientDto.dob,
       gender: createPatientDto.gender as Gender,
@@ -41,15 +44,23 @@ export class PatientsService {
             first_name: name,
           },
         },
-        relations: {user: true},
+        relations: { user: true },
       });
     }
     return await this.patientRepository.find({
-      relations: {user: true},
+      relations: { user: true },
     });
   }
 
-  // async findAll(): Promise<Patient[]> {
-  //   return this.patientRepository.find();
-  // }
+  async findWithAppointment(search?: string) {
+    if (search) {
+      return this.patientRepository.find({
+        where: [{ address: `%${search}%` }],
+        relations: ['appointment'],
+      });
+    }
+    return this.patientRepository.find({
+      relations: ['appointment'],
+    });
+  }
 }

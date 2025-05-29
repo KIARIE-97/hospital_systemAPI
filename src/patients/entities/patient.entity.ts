@@ -1,5 +1,6 @@
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 
 export enum Gender{
     FEMALE = 'female',
@@ -33,4 +34,7 @@ export class Patient {
   })
   @JoinColumn()
   user: Relation<User>;
+
+  @OneToMany(() => Appointment, (appointment) => appointment.patient)
+  appointment: Appointment[];
 }

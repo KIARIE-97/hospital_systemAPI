@@ -5,9 +5,10 @@ import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Patient } from './entities/patient.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Patient, User])],
+  imports: [DatabaseModule, TypeOrmModule.forFeature([Patient, User, Appointment])],
   controllers: [PatientsController],
   providers: [PatientsService],
 })

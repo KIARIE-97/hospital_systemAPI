@@ -24,25 +24,25 @@ export class PatientsController {
   }
 
   @Get()
-  findAll(@Query('name') name?: string) {
-    return this.patientsService.findAll(name);
+  findWithAppointment(@Query('address') address?: string) {
+    return this.patientsService.findAll(address);
   }
   @Get('search')
   search() {
-    return ;
+    return;
   }
   @Get(':id')
-  findOne()  {
-    return ;
+  findOne() {
+    return;
   }
 
   @Patch(':id')
-  update(){
-    return ;
+  update() {
+    return;
   }
 
   @Delete(':id')
-  remove () {
-    return ;
+  remove() {
+    return;
   }
 }

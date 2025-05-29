@@ -1,33 +1,22 @@
-import { IsString, IsNotEmpty, IsDate, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, IsOptional, IsNumber, IsDateString, IsEnum, IsInt } from 'class-validator';
+import { AStatus } from '../entities/appointment.entity';
 export class CreateAppointmentDto {
+  @IsInt()
+  patient_id: number;
+
   @IsOptional()
-  @IsNumber()
-  id?: number;
+  @IsInt()
+  doctor_id: number;
 
-  @IsNotEmpty()
-  @IsString()
-  patient_id: string;
+  @IsDateString()
+  appointment_date: string;
 
-  @IsNotEmpty()
-  @IsString()
-  doctor_id: string;
-
-  @IsNotEmpty()
-  @IsDate()
-  appointment_date: Date;
-
-  @IsNotEmpty()
-  @IsString()
-  status: string;
+  @IsEnum(AStatus, {
+    message:
+      'status must be one of the following: pending, confirmed or cancelled',
+  })
+  status: AStatus = AStatus.PENDING;
 
   @IsString()
   reason?: string; // Optional field for the reason of the appointment
-
-  @IsOptional()
-  @IsDate()
-  created_at?: Date;
-
-  @IsOptional()
-  @IsDate()
-  updated_at?: Date;
 }
