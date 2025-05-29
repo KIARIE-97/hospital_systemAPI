@@ -23,9 +23,6 @@ export class CreatePatientDto {
   @IsString()
   address: string;
 
-  @IsBoolean()
-  status: string;
-
   @IsNumber()
   user_id: number;
 }

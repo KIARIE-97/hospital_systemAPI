@@ -22,9 +22,6 @@ export class Patient {
   @Column('text')
   address: string;
 
-  @Column('boolean')
-  status: string;
-
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   registration_date: Date;
 

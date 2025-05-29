@@ -30,7 +30,6 @@ export class PatientsService {
       dob: createPatientDto.dob,
       gender: createPatientDto.gender as Gender,
       address: createPatientDto.address,
-      status: createPatientDto.status,
       user: existingUser,
     });
 

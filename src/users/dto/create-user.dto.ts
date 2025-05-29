@@ -14,8 +14,8 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsNumber()
-  phone_number: number;
+  @IsString()
+  phone_number: string;
 
   @IsEnum(Role, {
     message: 'Role must be one of the following: patient, admin or doctor',

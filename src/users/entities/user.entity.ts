@@ -30,7 +30,7 @@ export class User {
   password: string;
 
   @Column()
-  phone_number: number;
+  phone_number: string;
 
   @Column({ type: 'enum', enum: Role, default: Role.PATIENT })
   role: Role;
