@@ -40,15 +40,37 @@ export class UsersService {
   //   return this.patientRepository.save(newUser);
   // }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async remove(id: number): Promise<string> {
+    return await this.userRepository
+      .delete(id)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `No user found with id ${id}`;
+        }
+        return `user with id ${id} has been removed`;
+      })
+      .catch((error) => {
+        console.error('Error removing user:', error);
+        throw new Error(`Failed to remove user with id ${id}`);
+      });
+  }
+
+  findOne(id: number): Promise<User | string> {
+    return this.userRepository
+      .findOneBy({ id })
+      .then((profile) => {
+        if (!profile) {
+          return `No profile found with id ${id}`;
+        }
+        return profile;
+      })
+      .catch((error) => {
+        console.error('Error finding profile:', error);
+        throw new Error(`Failed to find profile with id ${id}`);
+      });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

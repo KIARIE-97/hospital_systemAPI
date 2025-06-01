@@ -30,14 +30,7 @@ export class SeedService {
       // Clear all tables using a transaction
       await this.clearTables();
 
-     
-
-      // Seed courses
-    //   const patient = await this.seedPatient(User);
-
-    //   const doctor = await this.seedDoctor(User);
-
-    //   // Seed profiles and students
+    
       const appointment = await this.seedAppointment();
        // Seed user
        const user = await this.seedUsers(appointment);
@@ -119,7 +112,7 @@ this.logger.log(`Created ${appointments.length} appointments`);
       // Save the profile
       const savedUser = await this.userRepository.save(user);
 
-      // Create student linked to the profile
+      // Create patient linked to the profile
       const patient = new Patient();
       patient.dob = faker.date.birthdate({ mode: 'year', min: 1900, max: 2025 }).toISOString().split('T')[0];
      patient.gender = Gender.UNDEFINED;
@@ -145,7 +138,7 @@ this.logger.log(`Created ${appointments.length} appointments`);
         // Save the doctor
         const savedDoctor = await this.doctorRepository.save(doctor);
 
-
+// Create a random number of appointments for the doctor and patient
         const appointmentCount = faker.number.int({ min: 1, max: 3 });
         const doctorAppointment: Appointment[] = [];
         const patientAppointment: Appointment[] = [];

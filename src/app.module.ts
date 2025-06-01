@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
+import { LogsModule } from './logs/logs.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SeedModule } from './seed/seed.module';
     }),
     UsersModule,
     SeedModule,
+    LogsModule,
   ],
   controllers: [],
   providers: [],
@@ -36,9 +38,6 @@ export class AppModule {
   configure( consumer: MiddlewareConsumer) {
     consumer
     .apply(LoggerMiddleware)
-    .exclude(
-      {path: 'patients/search', method:RequestMethod.GET},
-    )
-    .forRoutes('patients');
+    .forRoutes('patients', 'doctors', 'appointments', 'medical-histories', 'contact-queries', 'doctor-sessionlogs', 'patient-sessionlogs', 'users');
   }
 }

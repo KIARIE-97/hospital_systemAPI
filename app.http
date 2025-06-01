@@ -80,3 +80,12 @@ Content-Type: application/json
 
 ###
 DELETE {{URL}}/patients/2
+
+###
+DELETE {{URL}}/users/25
+
+###
+DELETE {{URL}}/doctors/25
+
+###
+DELETE {{URL}}/appointments/25
