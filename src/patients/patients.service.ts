@@ -35,17 +35,8 @@ export class PatientsService {
 
     return this.patientRepository.save(newPatient);
   }
-  async findAll(name?: string): Promise<Patient[]> {
-    if (name) {
-      return await this.patientRepository.find({
-        where: {
-          user: {
-            first_name: name,
-          },
-        },
-        relations: { user: true, appointment: true },
-      });
-    }
+  async findAll(): Promise<Patient[]> {
+ 
     return await this.patientRepository.find({
       relations: { user: true, appointment: true },
     });

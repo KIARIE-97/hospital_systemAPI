@@ -17,19 +17,9 @@ export class DoctorsService {
     private doctorRepository: Repository<Doctor>,
   ) {}
 
-  async getDoctorAppointments(name?: string): Promise<Doctor[]> {
-    if (name) {
-      return await this.doctorRepository.find({
-        where: {
-          user: {
-            first_name: name,
-          },
-        },
-        relations: { user: true },
-      });
-    }
+  async getDoctorAppointments(): Promise<Doctor[]> {
     return await this.doctorRepository.find({
-      relations: { user: true },
+      relations: { user: true, appointment: true },
     });
   }
 

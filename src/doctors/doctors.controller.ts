@@ -24,8 +24,8 @@ export class DoctorsController {
   }
 
   @Get()
-  findAll(@Query('name') name?: string) {
-    return this.doctorsService.getDoctorAppointments(name);
+  findAll() {
+    return this.doctorsService.getDoctorAppointments();
   }
 
   @Get(':id')

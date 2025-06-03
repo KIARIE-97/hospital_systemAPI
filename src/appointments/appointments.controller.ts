@@ -24,8 +24,8 @@ export class AppointmentsController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.appointmentsService.findAll(search);
+  findAll() {
+    return this.appointmentsService.findAll();
   }
 
   @Get(':id')

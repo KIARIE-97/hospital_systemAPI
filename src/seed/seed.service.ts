@@ -113,7 +113,7 @@ this.logger.log(`Created ${appointments.length} appointments`);
     const patients: Patient[] = [];
 
     const roles: Role[] = Array.from({ length: 10 }, () =>
-      Math.random() > 0.5 ? Role.DOCTOR : Role.PATIENT,
+      Math.random() > 0.5 ? Role.DOCTOR : Role.PATIENT, Role.ADMIN
     );
 
     const genders: Gender[] = Array.from({ length: 10 }, () =>

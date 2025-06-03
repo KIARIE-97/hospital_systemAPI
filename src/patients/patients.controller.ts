@@ -24,8 +24,8 @@ export class PatientsController {
   }
 
   @Get()
-  findWithAppointment(@Query('address') address?: string) {
-    return this.patientsService.findAll(address);
+  findWithAppointment() {
+    return this.patientsService.findAll();
   }
   // @Get('search')
   // search() {

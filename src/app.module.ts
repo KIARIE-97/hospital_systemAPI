@@ -8,14 +8,35 @@ import { DoctorSessionlogsModule } from './doctor-sessionlogs/doctor-sessionlogs
 import { PatientSessionlogsModule } from './patient-sessionlogs/patient-sessionlogs.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { DatabaseModule } from './database/database.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
 import { LogsModule } from './logs/logs.module';
 import { AdminModule } from './admin/admin.module';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheableMemory, Keyv } from 'cacheable';
+import { createKeyv } from '@keyv/redis';
 
 @Module({
   imports: [
+    // Global cache configuration
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      isGlobal: true, // Makes cache available globally
+      useFactory: (configService: ConfigService) => {
+        return {
+          stores: [
+            // Memory cache for fast local access
+            new Keyv({
+              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
+            }),
+            // Redis cache for persistent storage
+            createKeyv(configService.getOrThrow<string>('REDIS_URL')),
+          ],
+        };
+      },
+    }),
     PatientsModule,
     DoctorsModule,
     AppointmentsModule,
@@ -34,12 +55,26 @@ import { AdminModule } from './admin/admin.module';
     AdminModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: CacheInterceptor, // Global cache interceptor
+    },
+  ],
 })
 export class AppModule {
-  configure( consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(LoggerMiddleware)
-    .forRoutes('patients', 'doctors', 'appointments', 'medical-histories', 'contact-queries', 'doctor-sessionlogs', 'patient-sessionlogs', 'users');
+      .apply(LoggerMiddleware)
+      .forRoutes(
+        'patients',
+        'doctors',
+        'appointments',
+        'medical-histories',
+        'contact-queries',
+        'doctor-sessionlogs',
+        'patient-sessionlogs',
+        'users',
+      );
   }
 }
