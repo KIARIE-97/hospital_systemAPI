@@ -101,4 +101,55 @@ export class AppointmentsService {
       relations: ['patient', 'doctor'],
     });
   }
+  async findOne(id: number): Promise<Appointment | string> {
+    return await this.appointmentRepository
+      .findOne({
+        where: { id },
+        relations: ['patient', 'doctor'],
+      })
+      .then((appointment) => {
+        if (!appointment) {
+          return `No appointment found with id ${id}`;
+        }
+        return appointment;
+      })
+      .catch((error) => {
+        console.error('Error finding appointment:', error);
+        throw new Error(`Failed to find appointment with id ${id}`);
+      });
+  }
+
+  async update(
+    id: number,
+    updateAppointmentDto: UpdateAppointmentDto,
+  ): Promise<Appointment | string> {
+    await this.appointmentRepository.update(id, updateAppointmentDto);
+    return await this.findOne(id);
+  }
+
+  async remove(id: number): Promise<string> {
+    try {
+      // Load the appointment with its related doctors
+      const appointment = await this.appointmentRepository.findOne({
+        where: { id },
+        relations: ['doctor'], 
+      });
+
+      if (!appointment) {
+        return `No appointment found with id ${id}`;
+      }
+
+      // Unlink the appointment from doctors
+      appointment.doctor = [];
+      await this.appointmentRepository.save(appointment);
+
+      // Now delete the appointment
+      await this.appointmentRepository.remove(appointment);
+
+      return `Appointment with id ${id} has been removed`;
+    } catch (error) {
+      console.error('Error removing appointment:', error);
+      throw new Error(`Failed to remove appointment with id ${id}`);
+    }
+  }
 }

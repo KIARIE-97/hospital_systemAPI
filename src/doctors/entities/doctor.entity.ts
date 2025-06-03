@@ -13,14 +13,15 @@ export class Doctor {
   @Column()
   password: string;
 
-    @OneToOne(() => User, (user) => user.patient, {
+    @OneToOne(() => User, (user) => user.doctor, {
       cascade: true,
       onDelete: 'CASCADE',
     })
     @JoinColumn()
     user: Relation<User>;
 
-  @ManyToMany(() => Appointment, (appointment) => appointment.doctor)
+  @ManyToMany(() => Appointment, (appointment) => appointment.doctor, {
+    cascade: true})
   @JoinTable() // Important! This creates the join table in the database
   appointment: Relation<Appointment[]>;
 }

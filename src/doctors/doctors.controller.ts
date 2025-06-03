@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query, Patch } from '@nestjs/common';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
+import { UpdateDoctorDto } from './dto/update-doctor.dto';
 
 @Controller('doctors')
 export class DoctorsController {
@@ -25,5 +26,23 @@ export class DoctorsController {
   @Get()
   findAll(@Query('name') name?: string) {
     return this.doctorsService.getDoctorAppointments(name);
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.doctorsService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDoctorDto: UpdateDoctorDto,
+  ) {
+    return this.doctorsService.update(id, updateDoctorDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.doctorsService.remove(id);
   }
 }

@@ -17,24 +17,32 @@ export class AppointmentsController {
     @Param('appointment_id', ParseIntPipe) appointment_id: number,
     @Param('doctor_id', ParseIntPipe) doctor_id: number,
   ) {
-    return this.appointmentsService.addAppointmentToDoctor(appointment_id, doctor_id);
+    return this.appointmentsService.addAppointmentToDoctor(
+      appointment_id,
+      doctor_id,
+    );
   }
-  // @Get()
-  // findAll() {
-  //   return this.appointmentsService.findAll();
-  // }addAppointmentToDoctor
 
   @Get()
   findAll(@Query('search') search?: string) {
     return this.appointmentsService.findAll(search);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.appointmentsService.findOne(Number(id));
-  // }
-  // @Get('search/:query')
-  // search(@Param('query') query: string) {
-  //   return this.appointmentsService.search(query);
-  // }
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.appointmentsService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateAppointmentDto: UpdateAppointmentDto,
+  ) {
+    return this.appointmentsService.update(id, updateAppointmentDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.appointmentsService.remove(id);
+  }
 }

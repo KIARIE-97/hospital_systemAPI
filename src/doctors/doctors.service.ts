@@ -94,4 +94,45 @@ export class DoctorsService {
 
     return doctor;
   }
+  // async findAll(): Promise<Doctor[]> {
+  //   return this.doctorRepository.find();
+  // }
+
+  async findOne(id: number): Promise<Doctor | string> {
+    return await this.doctorRepository
+      .findOneBy({ id })
+      .then((doctor) => {
+        if (!doctor) {
+          return `No doctor found with id ${id}`;
+        }
+        return doctor;
+      })
+      .catch((error) => {
+        console.error('Error finding doctor:', error);
+        throw new Error(`Failed to find doctor with id ${id}`);
+      });
+  }
+
+  async update(
+    id: number,
+    updateDoctorDto: UpdateDoctorDto,
+  ): Promise<Doctor | string> {
+    await this.doctorRepository.update(id, updateDoctorDto);
+    return await this.findOne(id);
+  }
+
+  async remove(id: number): Promise<string> {
+    return await this.doctorRepository
+      .delete(id)
+      .then((result) => {
+        if (result.affected === 0) {
+          return `No doctor found with id ${id}`;
+        }
+        return `Doctor with id ${id} has been removed`;
+      })
+      .catch((error) => {
+        console.error('Error removing doctor:', error);
+        throw new Error(`Failed to remove doctor with id ${id}`);
+      });
+  }
 }

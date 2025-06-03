@@ -15,13 +15,19 @@ GET {{URL}}/doctors
 GET {{URL}}/appointments
 
 ###
-GET {{URL}}/patients/1
+GET {{URL}}/patients/22
+
+###
+GET {{URL}}/doctors/22
+
+###
+GET {{URL}}/users/25
 
 ###
 GET {{URL}}/patients/search?query=jane
 
-### Enroll a student in another course (student id = 1, course id = 2)
-POST {{URL}}/doctors/2/appointment/7
+### 
+POST {{URL}}/doctors/21/appointment/58
 
 ###
 POST {{URL}}/patients
@@ -71,21 +77,38 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{URL}}/patients/4
+PATCH {{URL}}/patients/20
 Content-Type: application/json
 
 {
-    "last_name": "Jane"
+    "gender": "male"
 }
 
 ###
-DELETE {{URL}}/patients/2
+PATCH {{URL}}/doctors/20
+Content-Type: application/json
+
+{
+    "specialty": "surgery"
+}
+
 
 ###
-DELETE {{URL}}/users/25
+PATCH {{URL}}/users/16
+Content-Type: application/json
+
+{
+    "role": "doctor"
+}
 
 ###
-DELETE {{URL}}/doctors/25
+DELETE {{URL}}/patients/20
 
 ###
-DELETE {{URL}}/appointments/25
+DELETE {{URL}}/users/17
+
+###
+DELETE {{URL}}/doctors/48
+
+###
+DELETE {{URL}}/appointments/72

@@ -27,22 +27,24 @@ export class PatientsController {
   findWithAppointment(@Query('address') address?: string) {
     return this.patientsService.findAll(address);
   }
-  @Get('search')
-  search() {
-    return;
-  }
+  // @Get('search')
+  // search() {
+  //   return;
+  // }
   @Get(':id')
-  findOne() {
-    return;
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.patientsService.findOne(id);
+    
   }
 
   @Patch(':id')
-  update() {
-    return;
+  update(@Param('id', ParseIntPipe) id: number, @Body() updatePatientDto: UpdatePatientDto) {
+    return this.patientsService.update(id, updatePatientDto);
   }
 
   @Delete(':id')
-  remove() {
-    return;
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.patientsService.remove(id);
+
   }
 }

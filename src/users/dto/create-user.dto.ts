@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsNumber, IsString } from "class-validator";
-import { Role, Status } from "../entities/user.entity";
+import { Role, UStatus } from "../entities/user.entity";
 
 export class CreateUserDto {
   @IsString()
@@ -22,8 +22,8 @@ export class CreateUserDto {
   })
   role: Role = Role.PATIENT;
 
-  @IsEnum(Status, {
+  @IsEnum(UStatus, {
     message: 'Status must be one of the following: active, inactive or pending',
   })
-  status: Status = Status.ACTIVE;
+  status: UStatus = UStatus.ACTIVE;
 }

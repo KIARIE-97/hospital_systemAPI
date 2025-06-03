@@ -1,13 +1,14 @@
+import { Admin } from "src/admin/entities/admin.entity";
 import { Doctor } from "src/doctors/entities/doctor.entity";
 import { Patient } from "src/patients/entities/patient.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
+import {  Column, Entity, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
 
 export enum Role {
   ADMIN = 'admin',
   PATIENT = 'patient',
   DOCTOR = 'doctor',
 }
-export enum Status {
+export enum UStatus {
   ACTIVE = 'active',
     INACTIVE = 'inactive',
     PENDING = 'pending',
@@ -35,12 +36,15 @@ export class User {
   @Column({ type: 'enum', enum: Role, default: Role.PATIENT })
   role: Role;
 
-  @Column({ type: 'enum', enum: Status, default: Status.ACTIVE })
-  status: Status;
+  @Column({ type: 'enum', enum: UStatus, default: UStatus.ACTIVE })
+  status: UStatus;
 
   @OneToOne(() => Patient, (patient) => patient.user)
   patient: Relation<Patient>;
 
   @OneToOne(() => Doctor, (doctor) => doctor.user)
   doctor: Relation<Doctor>;
+
+  @OneToOne(() => Admin, (admin) => admin.user)
+  admin: Relation<Admin>;
 }

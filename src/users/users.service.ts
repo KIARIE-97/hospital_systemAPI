@@ -26,20 +26,6 @@ export class UsersService {
       });
   }
 
-  // async create(createUserDto: CreateUserDto): Promise<User> {
-  //   const newUser = this.patientRepository.create({
-  //     first_name: createUserDto.first_name,
-  //     last_name: createUserDto.last_name,
-  //     email: createUserDto.email,
-  //     password: createUserDto.password,
-  //     phone_number: createUserDto.phone_number,
-  //     role: createUserDto.role,
-  //     status: createUserDto.status
-  //   });
-
-  //   return this.patientRepository.save(newUser);
-  // }
-
   async remove(id: number): Promise<string> {
     return await this.userRepository
       .delete(id)
@@ -70,7 +56,9 @@ export class UsersService {
       });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto):Promise<User | string> {
+    await this.userRepository.update(id, updateUserDto);
+
+    return await this.findOne(id);
   }
 }

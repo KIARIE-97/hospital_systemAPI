@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment, AStatus } from 'src/appointments/entities/appointment.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Gender, Patient } from 'src/patients/entities/patient.entity';
-import { Role, Status, User } from 'src/users/entities/user.entity';
+import { Role,  User, UStatus } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 
@@ -51,11 +51,17 @@ export class SeedService {
 
     try {
       // Order matters due to foreign key relationships
-      await queryRunner.query('DELETE FROM doctor_appointment_appointment'); // Delete from junction table first
-      await queryRunner.query('DELETE FROM appointment'); // Appointment has FK to Patient and Doctor
-      await queryRunner.query('DELETE FROM doctor'); // Student has FK to Profile
-      await queryRunner.query('DELETE FROM patient'); // Profile has FK to User
-      await queryRunner.query('DELETE FROM "user"'); // Course has FK to Department
+      await queryRunner.query(
+        'TRUNCATE TABLE doctor_appointment_appointment RESTART IDENTITY CASCADE',
+      ); // Delete from junction table first
+      await queryRunner.query(
+        'TRUNCATE TABLE appointment RESTART IDENTITY CASCADE',
+      ); // Appointment has FK to Patient and Doctor
+      await queryRunner.query('TRUNCATE TABLE doctor RESTART IDENTITY CASCADE'); // Student has FK to Profile
+      await queryRunner.query(
+        'TRUNCATE TABLE patient RESTART IDENTITY CASCADE',
+      ); // Profile has FK to User
+      await queryRunner.query('TRUNCATE TABLE "user" RESTART IDENTITY CASCADE'); // Course has FK to Department
 
       await queryRunner.commitTransaction();
       this.logger.log('All tables cleared successfully');
@@ -72,7 +78,19 @@ export class SeedService {
     this.logger.log('Seeding appointments...');
     const appointments: Appointment[] = [];
 
+    const Status: AStatus[] = Array.from({ length: 10 }, () =>
+      Math.random() > 0.5 ? AStatus.PENDING : AStatus.CONFIRMED, AStatus.CANCELLED
+    );
+
+    // Shuffle Status
+    for (let i = Status.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [Status[i], Status[j]] = [Status[j], Status[i]];
+    }
+
     for (let i = 0; i < 10; i++) {
+      const status = Status[i];
+
       const appointment = new Appointment();
       const startDate = faker.date.past({ years: 1 });
       const endDate = new Date(startDate);
@@ -80,7 +98,7 @@ export class SeedService {
         endDate.getMonth() + faker.number.int({ min: 3, max: 6 }),
       );
       appointment.appointment_date = endDate.toISOString().split('T')[0];
-      appointment.status = AStatus.PENDING;
+      appointment.status = status;
       appointment.reason = faker.lorem.sentence();
       appointments.push(await this.appointmentRepository.save(appointment));
     }
@@ -94,7 +112,42 @@ this.logger.log(`Created ${appointments.length} appointments`);
     const doctors: Doctor[] = [];
     const patients: Patient[] = [];
 
+    const roles: Role[] = Array.from({ length: 10 }, () =>
+      Math.random() > 0.5 ? Role.DOCTOR : Role.PATIENT,
+    );
+
+    const genders: Gender[] = Array.from({ length: 10 }, () =>
+      Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE,
+    );
+
+    const Status: UStatus[] = Array.from(
+      { length: 5 },
+      () => (Math.random() > 0.5 ? UStatus.ACTIVE : UStatus.INACTIVE),
+    );
+
+    // Shuffle roles
+    for (let i = roles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [roles[i], roles[j]] = [roles[j], roles[i]];
+    }
+
+    //shuffle gender
+    for (let i = genders.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [genders[i], genders[j]] = [genders[j], genders[i]];
+    }
+
+    // Shuffle Status
+    for (let i = Status.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [Status[i], Status[j]] = [Status[j], Status[i]];
+    }
+
     for (let i = 0; i < 10; i++) {
+      const role = roles[i];
+      const gender = genders[i];
+      const status = Status[i];
+
       // Create profile
       const user = new User();
       user.first_name = faker.person.firstName();
@@ -104,24 +157,29 @@ this.logger.log(`Created ${appointments.length} appointments`);
         lastName: user.last_name,
         provider: 'gohealth.hos',
       });
-        user.password = faker.internet.password({ length: 20, memorable: true });
-        user.phone_number = faker.phone.number();
-      user.role = Role.PATIENT;
-      user.status = Status.ACTIVE;
+      user.password = faker.internet.password({ length: 20, memorable: true });
+      user.phone_number = faker.phone.number();
+      user.role = role;
+      user.status = status;
 
       // Save the profile
       const savedUser = await this.userRepository.save(user);
 
       // Create patient linked to the profile
-      const patient = new Patient();
-      patient.dob = faker.date.birthdate({ mode: 'year', min: 1900, max: 2025 }).toISOString().split('T')[0];
-     patient.gender = Gender.UNDEFINED;
-      patient.address = faker.location.streetAddress();
-        patient.user = savedUser; 
-  // Save the patient
-      const savedpatient = await this.patientRepository.save(patient);
+      const appointmentCount = faker.number.int({ min: 1, max: 3 });
+      const selectedAppointments: Appointment[] = [];
 
-        // Create doctor linked to the profile
+      for (let j = 0; j < appointmentCount; j++) {
+        const randomIndex = faker.number.int({
+          min: 0,
+          max: appointment.length - 1,
+        });
+        selectedAppointments.push(appointment[randomIndex]);
+      }
+
+      const usedDoctorAppointmentPairs = new Set<string>();
+
+      if (role === Role.DOCTOR) {
         const doctor = new Doctor();
         doctor.specialty = faker.helpers.arrayElement([
           'Cardiology',
@@ -133,39 +191,50 @@ this.logger.log(`Created ${appointments.length} appointments`);
           'Psychiatry',
           'Radiology',
         ]);
-        doctor.password = faker.internet.password({ length: 20, memorable: true });
-        doctor.user = savedUser; // Link the doctor to the user profile
-        // Save the doctor
-        const savedDoctor = await this.doctorRepository.save(doctor);
+        doctor.password = faker.internet.password({
+          length: 20,
+          memorable: true,
+        });
+        doctor.user = savedUser;
 
-// Create a random number of appointments for the doctor and patient
-        const appointmentCount = faker.number.int({ min: 1, max: 3 });
-        const doctorAppointment: Appointment[] = [];
-        const patientAppointment: Appointment[] = [];
-const savedAppointments = [...appointment]; // Use the appointments created earlier
-        
-// Create appointments linked to the patient and doctor
-        for (let j = 0; j < appointmentCount; j++) {
-          if (savedAppointments.length === 0) break;
-          const randomIndex = faker.number.int({ min: 0, max: savedAppointments.length - 1 });
-          const selectedAppointment = savedAppointments.splice(randomIndex, 1)[0]; // Remove the selected appointment from the array
-          doctorAppointment.push(selectedAppointment);
-          patientAppointment.push(selectedAppointment);
+        const uniqueAppointments: Appointment[] = [];
+
+        for (const appt of selectedAppointments) {
+          const pairKey = `${savedUser.id}-${appt.id}`; // ensure doctor-appointment combo is unique
+          if (!usedDoctorAppointmentPairs.has(pairKey)) {
+            usedDoctorAppointmentPairs.add(pairKey);
+            uniqueAppointments.push(appt);
+          }
         }
 
-        // Link appointments to the doctor and patient
-        savedDoctor.appointment = doctorAppointment;
-        await this.doctorRepository.save(savedDoctor);
-         doctors.push(savedDoctor);
-       
-        // Link appointments to the patient
-        savedpatient.appointment = patientAppointment;
-        await this.patientRepository.save(savedpatient);
-        patients.push(savedpatient);
+        doctor.appointment = uniqueAppointments;
 
+        const savedDoctor = await this.doctorRepository.save(doctor);
+        doctors.push(savedDoctor);
+      }
 
-      
+      if (role === Role.PATIENT) {
+        const patient = new Patient();
+        patient.dob = faker.date
+          .birthdate({ mode: 'year', min: 1900, max: 2025 })
+          .toISOString()
+          .split('T')[0];
+        patient.gender = gender;
+        patient.address = faker.location.streetAddress();
+        patient.user = savedUser;
+
+        const savedPatient = await this.patientRepository.save(patient);
+
+        // Assign patient to each selected appointment
+        for (const appointment of selectedAppointments) {
+          appointment.patient = savedPatient.id;
+          await this.appointmentRepository.save(appointment);
+        }
+
+        patients.push(savedPatient);
+      }
+    }
+  }
+
 }
 
-}
-}
