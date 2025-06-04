@@ -36,7 +36,7 @@ export class AuthController {
   }
 
   //auth/signout
-  @Public()
+  @UseGuards(AtGuard)
   @Get('signout/:id')
   signOut(@Param('id', ParseIntPipe) id: number) {
     return this.authService.signOut(id);

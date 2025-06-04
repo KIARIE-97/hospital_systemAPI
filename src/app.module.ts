@@ -65,7 +65,7 @@ import { AtGuard } from './auth/guards';
       useClass: CacheInterceptor, // Global cache interceptor
     },
     {
-      provide: 'APP_GUARD',
+      provide: APP_GUARD,
       useClass: AtGuard, // Use AuthModule to provide global authentication guard
     },
   ],

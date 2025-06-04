@@ -14,19 +14,23 @@ POST {{URL}}/auth/signin
 Content-Type: application/json
 
 {
-    "email": "jji@gmail.com",
+    "email": "joe@gmail.com",
     "password": "12345"
 }
-###
-GET {{URL}}/auth/signout/12 
+
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzE3ODUsImV4cCI6MTc0OTA3MjY4NX0.fRE-v_CFYP9ItqlOGEXSaJjoLI67iC8ToewdUopwNwA
-@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzYwNTAsImV4cCI6MTc0OTY4MDg1MH0.lE1lZ9QMlf7tHRn1iLeK-9TuZCbGK1ktOMJn4FmB3Lk
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzg1NjAsImV4cCI6MTc0OTA3OTQ2MH0.Okm1WSM-PCGLhop_EjO_WoTgHFlo8B-Jn4Ibdmc9yF8
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzg1NjAsImV4cCI6MTc0OTY4MzM2MH0.8s-4rmXFxhG3SSuEwgoPEPU6fmdIFDM0aN7f4TJyVUs
+
 
 ###
-GET {{URL}}/auth/refresh?id=11
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6ImpqaUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzY0MTcsImV4cCI6MTc0OTY4MTIxN30.LMnur4BHG745s21Hk5Q0hd6YwNqSb-TJ5eF7hTmAEsg
+GET {{URL}}/auth/signout/12
+Authorization: Bearer {{accessToken}} 
+
+###
+GET {{URL}}/auth/refresh?id=12
+Authorization: Bearer {{refreshToken}}
 
 
 ###
