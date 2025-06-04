@@ -1,9 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Appointment, AStatus } from 'src/appointments/entities/appointment.entity';
+import {
+  Appointment,
+  AStatus,
+} from 'src/appointments/entities/appointment.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Gender, Patient } from 'src/patients/entities/patient.entity';
-import { Role,  User, UStatus } from 'src/users/entities/user.entity';
+import { Role, User, UStatus } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { Admin } from 'src/admin/entities/admin.entity';
@@ -33,10 +36,9 @@ export class SeedService {
       // Clear all tables using a transaction
       await this.clearTables();
 
-    
       const appointment = await this.seedAppointment();
-       // Seed user
-       const user = await this.seedUsers(appointment);
+      // Seed user
+      const user = await this.seedUsers(appointment);
 
       this.logger.log('Seeding completed successfully');
       return { message: 'Database seeded successfully' };
@@ -106,7 +108,7 @@ export class SeedService {
       appointment.reason = faker.lorem.sentence();
       appointments.push(await this.appointmentRepository.save(appointment));
     }
-this.logger.log(`Created ${appointments.length} appointments`);
+    this.logger.log(`Created ${appointments.length} appointments`);
     // Save all appointments in a single query
     return appointments;
   }
@@ -126,9 +128,8 @@ this.logger.log(`Created ${appointments.length} appointments`);
       Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE,
     );
 
-    const Status: UStatus[] = Array.from(
-      { length: 5 },
-      () => (Math.random() > 0.5 ? UStatus.ACTIVE : UStatus.INACTIVE),
+    const Status: UStatus[] = Array.from({ length: 5 }, () =>
+      Math.random() > 0.5 ? UStatus.ACTIVE : UStatus.INACTIVE,
     );
 
     // Shuffle roles
@@ -251,6 +252,4 @@ this.logger.log(`Created ${appointments.length} appointments`);
       }
     }
   }
-
 }
-

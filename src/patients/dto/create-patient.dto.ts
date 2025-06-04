@@ -26,7 +26,7 @@ export class CreatePatientDto {
   @ApiProperty()
   @IsString()
   address: string;
- 
+
   @ApiProperty()
   @IsNumber()
   user_id: number;

@@ -1,11 +1,19 @@
 import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
-export enum Gender{
-    FEMALE = 'female',
-    MALE = 'male',
-    UNDEFINED = 'undefined',
+export enum Gender {
+  FEMALE = 'female',
+  MALE = 'male',
+  UNDEFINED = 'undefined',
 }
 
 @Entity()

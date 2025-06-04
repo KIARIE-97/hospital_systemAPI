@@ -42,7 +42,7 @@ export class AppointmentsService {
     }
     const newAppointment = this.appointmentRepository.create({
       appointment_date: createAppointmentDto.appointment_date,
-      status: createAppointmentDto.status as AStatus,
+      status: createAppointmentDto.status,
       reason: createAppointmentDto.reason,
       patient: createAppointmentDto.patient_id,
       // doctor: createAppointmentDto.doctor_id,
@@ -92,7 +92,6 @@ export class AppointmentsService {
   }
 
   async findAll(): Promise<Appointment[]> {
-   
     return this.appointmentRepository.find({
       relations: ['patient', 'doctor'],
     });
@@ -128,7 +127,7 @@ export class AppointmentsService {
       // Load the appointment with its related doctors
       const appointment = await this.appointmentRepository.findOne({
         where: { id },
-        relations: ['doctor'], 
+        relations: ['doctor'],
       });
 
       if (!appointment) {

@@ -8,7 +8,10 @@ import { Appointment } from './entities/appointment.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([Patient, Doctor, Appointment])],
+  imports: [
+    DatabaseModule,
+    TypeOrmModule.forFeature([Patient, Doctor, Appointment]),
+  ],
   controllers: [AppointmentsController],
   providers: [AppointmentsService],
 })

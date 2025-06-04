@@ -1,4 +1,13 @@
-import { IsString, IsNotEmpty, IsDate, IsOptional, IsNumber, IsDateString, IsEnum, IsInt } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsDate,
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  IsEnum,
+  IsInt,
+} from 'class-validator';
 import { AStatus } from '../entities/appointment.entity';
 export class CreateAppointmentDto {
   @IsInt()

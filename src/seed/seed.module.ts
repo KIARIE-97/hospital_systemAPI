@@ -9,8 +9,10 @@ import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { Admin } from 'src/admin/entities/admin.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Patient, Doctor, Appointment, Admin])], // Add your entities here if needed
+  imports: [
+    TypeOrmModule.forFeature([User, Patient, Doctor, Appointment, Admin]),
+  ], // Add your entities here if needed
   controllers: [SeedController],
-  providers: [SeedService]
+  providers: [SeedService],
 })
 export class SeedModule {}

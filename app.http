@@ -10,6 +10,26 @@ GET {{URL}}/patients
 GET {{URL}}/users
 
 ###
+POST {{URL}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "jji@gmail.com",
+    "password": "12345"
+}
+###
+GET {{URL}}/auth/signout/12 
+
+#############################
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzE3ODUsImV4cCI6MTc0OTA3MjY4NX0.fRE-v_CFYP9ItqlOGEXSaJjoLI67iC8ToewdUopwNwA
+@RefreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzYwNTAsImV4cCI6MTc0OTY4MDg1MH0.lE1lZ9QMlf7tHRn1iLeK-9TuZCbGK1ktOMJn4FmB3Lk
+
+###
+GET {{URL}}/auth/refresh?id=11
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjExLCJlbWFpbCI6ImpqaUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzY0MTcsImV4cCI6MTc0OTY4MTIxN30.LMnur4BHG745s21Hk5Q0hd6YwNqSb-TJ5eF7hTmAEsg
+
+
+###
 GET {{URL}}/doctors
 ###
 GET {{URL}}/appointments
@@ -46,9 +66,9 @@ POST {{URL}}/users
 Content-Type: application/json
 
 {
-    "first_name": "james",
+    "first_name": "jones",
     "last_name": "kiarie",
-    "email": "jj@gmail.com",
+    "email": "joe@gmail.com",
     "password": "12345",
     "phone_number": "13456",
     "role": "doctor",

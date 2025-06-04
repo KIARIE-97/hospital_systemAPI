@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsEmail, IsNumber, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  IsNumber,
+  IsDate,
+} from 'class-validator';
 export class CreateDoctorSessionlogDto {
   @IsNotEmpty()
   @IsNumber()

@@ -14,9 +14,11 @@ import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 
-
 @Module({
-  imports: [DatabaseModule, TypeOrmModule.forFeature([User, Admin, Appointment, Doctor, Patient])],
+  imports: [
+    DatabaseModule,
+    TypeOrmModule.forFeature([User, Admin, Appointment, Doctor, Patient]),
+  ],
   controllers: [AdminController],
   providers: [
     AdminService,

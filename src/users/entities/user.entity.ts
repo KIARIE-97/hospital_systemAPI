@@ -1,7 +1,13 @@
-import { Admin } from "src/admin/entities/admin.entity";
-import { Doctor } from "src/doctors/entities/doctor.entity";
-import { Patient } from "src/patients/entities/patient.entity";
-import {  Column, Entity, OneToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
+import { Admin } from 'src/admin/entities/admin.entity';
+import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Patient } from 'src/patients/entities/patient.entity';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
 export enum Role {
   ADMIN = 'admin',
@@ -10,8 +16,8 @@ export enum Role {
 }
 export enum UStatus {
   ACTIVE = 'active',
-    INACTIVE = 'inactive',
-    PENDING = 'pending',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
 }
 @Entity()
 export class User {
@@ -29,6 +35,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({ type: 'text', nullable: true, default: null })
+  hashedRefreshToken: string | null;
 
   @Column()
   phone_number: string;

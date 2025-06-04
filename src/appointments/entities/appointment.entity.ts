@@ -1,6 +1,13 @@
-import { Doctor } from "src/doctors/entities/doctor.entity";
-import { Patient } from "src/patients/entities/patient.entity";
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Relation } from "typeorm";
+import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Patient } from 'src/patients/entities/patient.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 
 export enum AStatus {
   PENDING = 'pending',

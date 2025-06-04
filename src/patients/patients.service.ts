@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +32,7 @@ export class PatientsService {
     }
     const newPatient = this.patientRepository.create({
       dob: createPatientDto.dob,
-      gender: createPatientDto.gender as Gender,
+      gender: createPatientDto.gender,
       address: createPatientDto.address,
       user: existingUser,
     });
@@ -36,7 +40,6 @@ export class PatientsService {
     return this.patientRepository.save(newPatient);
   }
   async findAll(): Promise<Patient[]> {
- 
     return await this.patientRepository.find({
       relations: { user: true, appointment: true },
     });
@@ -88,7 +91,7 @@ export class PatientsService {
 
   async update(
     id: number,
-    updatePatientDto: UpdatePatientDto
+    updatePatientDto: UpdatePatientDto,
   ): Promise<Patient | string> {
     await this.patientRepository.update(id, updatePatientDto);
     return await this.findOne(id);
