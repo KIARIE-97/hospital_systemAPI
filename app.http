@@ -50,7 +50,7 @@ Content-Type: application/json
     "last_name": "kiarie",
     "email": "jj@gmail.com",
     "password": "12345",
-    "phone_number": 13456,
+    "phone_number": "13456",
     "role": "doctor",
     "status": "active"
 }

@@ -6,6 +6,7 @@ import { Gender, Patient } from 'src/patients/entities/patient.entity';
 import { Role,  User, UStatus } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
+import { Admin } from 'src/admin/entities/admin.entity';
 
 @Injectable()
 export class SeedService {
@@ -20,6 +21,8 @@ export class SeedService {
     private readonly patientRepository: Repository<Patient>,
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
+    @InjectRepository(Admin)
+    private readonly adminRepository: Repository<Admin>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -78,9 +81,10 @@ export class SeedService {
     this.logger.log('Seeding appointments...');
     const appointments: Appointment[] = [];
 
-    const Status: AStatus[] = Array.from({ length: 10 }, () =>
-      Math.random() > 0.5 ? AStatus.PENDING : AStatus.CONFIRMED, AStatus.CANCELLED
-    );
+    const Status: AStatus[] = Array.from({ length: 10 }, () => {
+      const statuses = [AStatus.PENDING, AStatus.CONFIRMED, AStatus.CANCELLED];
+      return statuses[Math.floor(Math.random() * statuses.length)];
+    });
 
     // Shuffle Status
     for (let i = Status.length - 1; i > 0; i--) {
@@ -108,13 +112,15 @@ this.logger.log(`Created ${appointments.length} appointments`);
   }
 
   private async seedUsers(appointment: Appointment[]) {
-    this.logger.log('Seeding user, doctor and patient...');
+    this.logger.log('Seeding user, admin, doctor and patient...');
     const doctors: Doctor[] = [];
     const patients: Patient[] = [];
+    const admins: Admin[] = [];
 
-    const roles: Role[] = Array.from({ length: 10 }, () =>
-      Math.random() > 0.5 ? Role.DOCTOR : Role.PATIENT, Role.ADMIN
-    );
+    const roles: Role[] = Array.from({ length: 10 }, () => {
+      const allRoles = [Role.DOCTOR, Role.PATIENT, Role.ADMIN];
+      return allRoles[Math.floor(Math.random() * allRoles.length)];
+    });
 
     const genders: Gender[] = Array.from({ length: 10 }, () =>
       Math.random() > 0.5 ? Gender.FEMALE : Gender.MALE,
@@ -164,6 +170,16 @@ this.logger.log(`Created ${appointments.length} appointments`);
 
       // Save the profile
       const savedUser = await this.userRepository.save(user);
+
+      //create admin if role is ADMIN
+      if (role === Role.ADMIN) {
+        const admin = new Admin();
+        admin.username = faker.internet.username();
+        admin.user = savedUser;
+
+        const savedAdmin = await this.adminRepository.save(admin);
+        admins.push(savedAdmin);
+      }
 
       // Create patient linked to the profile
       const appointmentCount = faker.number.int({ min: 1, max: 3 });
