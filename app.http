@@ -14,38 +14,51 @@ POST {{URL}}/auth/signin
 Content-Type: application/json
 
 {
-    "email": "joe@gmail.com",
+    "email": "tiff@gmail.com",
     "password": "12345"
 }
 
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzg1NjAsImV4cCI6MTc0OTA3OTQ2MH0.Okm1WSM-PCGLhop_EjO_WoTgHFlo8B-Jn4Ibdmc9yF8
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJpYXQiOjE3NDkwNzg1NjAsImV4cCI6MTc0OTY4MzM2MH0.8s-4rmXFxhG3SSuEwgoPEPU6fmdIFDM0aN7f4TJyVUs
-
-
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDkxMDc2Njh9.ZqAR6qkI5cTVTFWWesrhRZdQliKS68E7ca3l93gSAEQ
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDk3MTE1Njh9.2X3vV96RhZimPqPLu4gjtiLVkUTpGMWvw_Z_6ENWS_4
 ###
-GET {{URL}}/auth/signout/12
+POST  {{URL}}/auth/signout/13
 Authorization: Bearer {{accessToken}} 
+Content-Type: application/json
 
-###
-GET {{URL}}/auth/refresh?id=12
+{
+    "id": "13"
+}
+
+### Refresh Tokens
+POST {{URL}}/auth/refresh?id=13
 Authorization: Bearer {{refreshToken}}
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
 
 
 ###
 GET {{URL}}/doctors
+Authorization: Bearer {{accessToken}} 
+
 ###
 GET {{URL}}/appointments
+Authorization: Bearer {{accessToken}} 
 
 ###
 GET {{URL}}/patients/22
+Authorization: Bearer {{accessToken}} 
 
 ###
 GET {{URL}}/doctors/22
 
 ###
-GET {{URL}}/users/25
+GET {{URL}}/users/13
+Authorization: Bearer {{accessToken}} 
 
 ###
 GET {{URL}}/patients/search?query=jane
@@ -70,9 +83,9 @@ POST {{URL}}/users
 Content-Type: application/json
 
 {
-    "first_name": "jones",
-    "last_name": "kiarie",
-    "email": "joe@gmail.com",
+    "first_name": "tiffany",
+    "last_name": "kiamwanikirie",
+    "email": "tiff@gmail.com",
     "password": "12345",
     "phone_number": "13456",
     "role": "doctor",
@@ -118,11 +131,12 @@ Content-Type: application/json
 
 
 ###
-PATCH {{URL}}/users/16
+PATCH {{URL}}/users/11
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "role": "doctor"
+    "role": "patient"
 }
 
 ###

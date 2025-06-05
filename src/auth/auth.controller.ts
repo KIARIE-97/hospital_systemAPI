@@ -36,18 +36,22 @@ export class AuthController {
   }
 
   //auth/signout
-  @UseGuards(AtGuard)
-  @Get('signout/:id')
+  
+  @Post('signout/:id')
   signOut(@Param('id', ParseIntPipe) id: number) {
+    console.log('Signout hit');
     return this.authService.signOut(id);
   }
 
   @Public()
   @UseGuards(RtGuard)
-  @Get('refresh')
-  refreshTokens(@Query('id') id: number, @Req() req: RequestWithUser) {
+  @Post('refresh')
+  refreshTokens(@Query('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
     console.log('Refresh hit');
     const user = req.user;
+    console.log('User from request:', typeof (user.sub));
+    console.log('User ID from query:', typeof (id));
+    console.log(' request:', user.sub !== id);
     if (user.sub !== id) {
       throw new UnauthorizedException('Invalid user');
     }

@@ -63,6 +63,7 @@ export class AuthService {
     await this.userRepository.update(user_id, {
       hashedRefreshToken: hashedRefreshToken,
     });
+    return hashedRefreshToken;
   }
 
   async signIn(createAuthDto: CreateAuthDto) {
@@ -74,6 +75,8 @@ export class AuthService {
       throw new Error(`User with email ${createAuthDto.email} not found`);
     }
     // compare hashed password with the one in the database
+    console.log('found user',founduser.password);
+    console.log('passed',createAuthDto.password);
     const foundpassword = await Bcrypt.compare(
       createAuthDto.password,
       founduser.password,
@@ -88,22 +91,34 @@ export class AuthService {
       founduser.id,
       founduser.email,
     );
+
+    // save the refresh token in the database
+    console.log('refresh token', refreshToken);
+
     await this.saveRefreshToken(founduser.id, refreshToken);
-    return { accessToken, refreshToken };
+
+    return { founduser, accessToken, refreshToken };
   }
 
-  async signOut(id: number) {
-    const founduser = await this.userRepository.findOne({
-      where: { id: id },
-      select: ['id', 'email', 'hashedRefreshToken'],
-    });
-    if (!founduser) {
-      throw new NotFoundException(`user wth id ${id}not found`);
-    }
-    await this.userRepository.update(id, {
+  async signOut(user_id: number) {
+    console.log('SignOut service hit with id:', user_id);
+    // const founduser = await this.userRepository.findOne({
+    //   where: { id: user_id },
+    //   select: ['id', 'email', 'hashedRefreshToken'],
+    // });
+    // console.log('Found user:', founduser);
+    // if (!founduser) {
+    //   throw new NotFoundException(`user wth id ${user_id}not found`);
+    // }
+    const result = await this.userRepository.update(user_id, {
       hashedRefreshToken: null,
     });
-    return { message: `user with id: ${id} signed out successfully✔️` };
+
+    if (result.affected === 0) {
+      throw new Error('Signout failed — no user was updated');
+    }
+
+    return { message: `User with id: ${user_id} signed out successfully ✔️` };
   }
   async refreshTokens(id: number, refreshToken: string) {
     const founduser = await this.userRepository.findOne({
