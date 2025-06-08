@@ -47,7 +47,7 @@ export class DoctorsService {
     doctor_id: number,
     appointment_id: number,
   ): Promise<Doctor> {
-    // Find the student with appointments relation
+    // Find the doctor with appointments relation
     const doctor = await this.doctorRepository.findOne({
       where: { id: doctor_id },
       relations: ['appointment'],
@@ -76,14 +76,51 @@ export class DoctorsService {
     const isAlreadyAppointed = doctor.appointment.some(
       (enrolledappointment) => enrolledappointment.id === appointment_id,
     );
+    const isAvailable = await this.doctorRepository
+      .createQueryBuilder('doctor')
+      .leftJoinAndSelect('doctor.user', 'user')
+      .where('user.status = :status', { status: 'active' })
+      .getMany();
 
-    if (!isAlreadyAppointed) {
+    if (!isAlreadyAppointed && isAvailable) {
       doctor.appointment.push(appointment);
       await this.doctorRepository.save(doctor);
     }
 
     return doctor;
   }
+  //reassign appointments to a doctor
+  async reassignAppointmentsToDoctor(
+    doctor_id: number,
+    appointment_id: number,
+  ): Promise<Doctor> {
+    // Find the doctor with appointments relation
+    const doctor = await this.doctorRepository.findOne({
+      where: { id: doctor_id },
+      relations: ['appointment'],
+    });
+
+    if (!doctor) {
+      throw new NotFoundException(`Doctor with ID ${doctor_id} not found`);
+    }
+
+    // Find the appointment
+    const appointment = await this.appointmentRepository.findOneBy({
+      id: appointment_id,
+    });
+    if (!appointment) {
+      throw new NotFoundException(
+        `Appointment with ID ${appointment_id} not found`,
+      );
+    }
+
+    //remove the appointment from the current doctor
+    doctor.appointment = doctor.appointment.filter(currentAppointment => currentAppointment.id !== appointment_id);
+ await this.doctorRepository.save(doctor);
+    return doctor;
+  }
+
+
   // async findAll(): Promise<Doctor[]> {
   //   return this.doctorRepository.find();
   // }
@@ -110,7 +147,20 @@ export class DoctorsService {
     await this.doctorRepository.update(id, updateDoctorDto);
     return await this.findOne(id);
   }
+//activate/deactivate a doctor
+  // async updateStatus(id: number, updateDoctorDto: UpdateDoctorDto) {
+  //   const doctor = await this.doctorRepository.findOneBy({ id });
+  //   if (!doctor) {
+  //     throw new NotFoundException(`Doctor with ID ${id} not found`);
+  //   }
 
+  //   // Update the doctor's status
+  //   doctor.user.status = updateDoctorDto.user_id;
+
+  //   // Save the updated doctor
+  //   return await this.doctorRepository.save(doctor);
+  // }
+  
   async remove(id: number): Promise<string> {
     return await this.doctorRepository
       .delete(id)

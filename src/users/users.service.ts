@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -85,5 +85,16 @@ export class UsersService {
     await this.userRepository.update(id, updateUserDto);
 
     return await this.findOne(id);
+  }
+
+  // Reset password for a user
+  async resetPassword(user_id: number, newPassword: string): Promise<string> {
+    const user = await this.userRepository.findOneBy({ id: user_id });
+    if (!user) {
+      throw new NotFoundException(`User with id ${user_id} not found`);
+    }
+    user.password = await this.hashData(newPassword);
+    await this.userRepository.save(user);
+    return 'Password reset successfully';
   }
 }

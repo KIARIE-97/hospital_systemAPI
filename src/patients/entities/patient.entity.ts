@@ -40,6 +40,6 @@ export class Patient {
   @JoinColumn()
   user: Relation<User>;
 
-  @OneToMany(() => Appointment, (appointment) => appointment.patient)
+  @OneToMany(() => Appointment, (appointment) => appointment.patient, {nullable: true})
   appointment: Appointment[];
 }

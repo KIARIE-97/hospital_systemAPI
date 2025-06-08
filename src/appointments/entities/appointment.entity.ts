@@ -38,7 +38,7 @@ export class Appointment {
   })
   updated_at: Date;
 
-  @ManyToOne(() => Patient, (patient) => patient.id)
+  @ManyToOne(() => Patient, (patient) => patient.id, {nullable: true})
   patient: Patient['id'];
 
   @ManyToMany(() => Doctor, (doctor) => doctor.appointment)

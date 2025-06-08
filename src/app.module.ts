@@ -31,9 +31,9 @@ import { AtGuard } from './auth/guards';
         return {
           stores: [
             // Memory cache for fast local access
-            new Keyv({
-              store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
-            }),
+            // new Keyv({
+            //   store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
+            // }),
             // Redis cache for persistent storage
             createKeyv(configService.getOrThrow<string>('REDIS_URL')),
           ],
@@ -83,6 +83,7 @@ export class AppModule {
         'doctor-sessionlogs',
         'patient-sessionlogs',
         'users',
+        'admin',
       );
   }
 }

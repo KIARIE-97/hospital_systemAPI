@@ -40,22 +40,28 @@ export class PatientsService {
     return this.patientRepository.save(newPatient);
   }
   async findAll(): Promise<Patient[]> {
-    return await this.patientRepository.find({
-      relations: { user: true, appointment: true },
+    console.log('Fetching all patients from patient service');
+  return await this.patientRepository
+    .createQueryBuilder('patient')
+    .leftJoinAndSelect('patient.user', 'user')
+    .leftJoinAndSelect('patient.appointment', 'appointment')
+    .getMany();
+}
+
+  async searchPatient(search?: string) {
+    if (search) {
+      return this.patientRepository
+        .createQueryBuilder('patient')
+        .leftJoinAndSelect('patient.user', 'user')
+        .where('LOWER(user.first_name) LIKE :search', {
+          search: `%${search.toLowerCase()}%`,
+        })
+        .getMany();
+    }
+    return this.patientRepository.find({
+      relations: ['user'],
     });
   }
-
-  // async findWithAppointment(search?: string) {
-  //   if (search) {
-  //     return this.patientRepository.find({
-  //       where: [{ address: `%${search}%` }],
-  //       relations: ['appointment'],
-  //     });
-  //   }
-  //   return this.patientRepository.find({
-  //     relations: ['appointment'],
-  //   });
-  // }
   async remove(id: number): Promise<string> {
     return await this.patientRepository
       .delete(id)

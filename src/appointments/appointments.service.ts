@@ -68,7 +68,8 @@ export class AppointmentsService {
     }
 
     // Find the doctor
-    const doctor = await this.doctorRepository.findOneBy({ id: doctor_id });
+    const doctor = await this.doctorRepository.findOneBy({ id: doctor_id
+     });
     if (!doctor) {
       throw new NotFoundException(`doctor with ID ${doctor_id} not found`);
     }

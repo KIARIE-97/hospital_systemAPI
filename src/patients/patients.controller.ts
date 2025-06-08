@@ -13,7 +13,11 @@ import {
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@Public()
+@ApiBearerAuth('access-token')
 @Controller('patients')
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
@@ -27,10 +31,14 @@ export class PatientsController {
   findWithAppointment() {
     return this.patientsService.findAll();
   }
-  // @Get('search')
-  // search() {
-  //   return;
-  // }
+ @Get('search')
+  searchPatient(@Query('search') search?: string) {
+    if (search) {
+      return this.patientsService.searchPatient(search);
+    } else {
+      return this.patientsService.findAll();
+    }
+  }
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.patientsService.findOne(id);

@@ -12,6 +12,7 @@ import {
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -33,6 +34,7 @@ export class AppointmentsController {
     );
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.appointmentsService.findAll();

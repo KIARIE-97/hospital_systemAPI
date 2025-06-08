@@ -14,6 +14,16 @@ async function bootstrap() {
     .setDescription('API documentation for the HealthCare application')
     .setVersion('1.0')
     .addTag('healthcare')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'access-token', 
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

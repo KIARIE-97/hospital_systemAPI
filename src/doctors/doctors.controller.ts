@@ -12,7 +12,9 @@ import {
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+@Public()
 @Controller('doctors')
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
@@ -22,12 +24,23 @@ export class DoctorsController {
     return this.doctorsService.create(createDoctorDto);
   }
 
-  @Post(':doctor_id/appointment/:appointment_id')
-  enrollStudentInCourse(
+  @Post(':doctor_id/appointments/:appointment_id')
+  addAppointmenttoDoctor(
     @Param('doctor_id', ParseIntPipe) doctor_id: number,
     @Param('appointment_id', ParseIntPipe) appointment_id: number,
   ) {
     return this.doctorsService.addAppointmenttoDoctor(
+      doctor_id,
+      appointment_id,
+    );
+  }
+
+  @Post(':doctor_id/appointment/:appointment_id')
+  reassignAppointmentsToDoctor(
+    @Param('doctor_id', ParseIntPipe) doctor_id: number,
+    @Param('appointment_id', ParseIntPipe) appointment_id: number,
+  ) {
+    return this.doctorsService.reassignAppointmentsToDoctor(
       doctor_id,
       appointment_id,
     );

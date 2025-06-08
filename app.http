@@ -5,6 +5,7 @@ POST {{URL}}/seed
 
 ###
 GET {{URL}}/patients
+Authorization: Bearer {{accessToken}} 
 
 ###
 GET {{URL}}/users
@@ -20,7 +21,7 @@ Content-Type: application/json
 
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDkxMDc2Njh9.ZqAR6qkI5cTVTFWWesrhRZdQliKS68E7ca3l93gSAEQ
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTE3NzQ3LCJleHAiOjE3NDkxMTg2NDd9.7wcdFcGGhyzHdV5fE1rYel6bnfuVlItJmpLzbUt4RgY
 @refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDk3MTE1Njh9.2X3vV96RhZimPqPLu4gjtiLVkUTpGMWvw_Z_6ENWS_4
 ###
 POST  {{URL}}/auth/signout/13
