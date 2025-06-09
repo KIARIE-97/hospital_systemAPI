@@ -9,19 +9,20 @@ Authorization: Bearer {{accessToken}}
 
 ###
 GET {{URL}}/users
+Authorization: Bearer {{accessToken}} 
 
 ###
 POST {{URL}}/auth/signin
 Content-Type: application/json
 
 {
-    "email": "tiff@gmail.com",
+    "email": "kiaris@gmail.com",
     "password": "12345"
 }
 
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTE3NzQ3LCJleHAiOjE3NDkxMTg2NDd9.7wcdFcGGhyzHdV5fE1rYel6bnfuVlItJmpLzbUt4RgY
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE0LCJlbWFpbCI6ImtpYXJpc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk0NjA4MzcsImV4cCI6MTc0OTQ2MTczN30.JHe2UlpK4OHIjTkRxnbnURaXqYQz38Hady9P1szEf6k
 @refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDk3MTE1Njh9.2X3vV96RhZimPqPLu4gjtiLVkUTpGMWvw_Z_6ENWS_4
 ###
 POST  {{URL}}/auth/signout/13
@@ -81,15 +82,16 @@ Content-Type: application/json
 
 ###
 POST {{URL}}/users
+Authorization: Bearer {{accessToken}} 
 Content-Type: application/json
 
 {
-    "first_name": "tiffany",
-    "last_name": "kiamwanikirie",
-    "email": "tiff@gmail.com",
+    "first_name": "sara",
+    "last_name": "kiaris",
+    "email": "kiaris@gmail.com",
     "password": "12345",
     "phone_number": "13456",
-    "role": "doctor",
+    "role": "admin",
     "status": "active"
 }
 

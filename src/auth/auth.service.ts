@@ -20,12 +20,13 @@ export class AuthService {
     return Bcrypt.hash(data, salt);
   }
   //a method to help generate access and refresh tokens for the users
-  private async getTokens(user_id: number, email: string) {
+  private async getTokens(user_id: number, email: string, role: string) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: user_id,
           email: email,
+          role: role, // Include the role in the access token payload
         },
         {
           secret: this.configService.getOrThrow<string>(
@@ -40,6 +41,7 @@ export class AuthService {
         {
           sub: user_id,
           email: email,
+          role: role
         },
         {
           secret: this.configService.getOrThrow<string>(
@@ -69,7 +71,7 @@ export class AuthService {
   async signIn(createAuthDto: CreateAuthDto) {
     const founduser = await this.userRepository.findOne({
       where: { email: createAuthDto.email },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'email', 'password', 'role'],
     });
     if (!founduser) {
       throw new Error(`User with email ${createAuthDto.email} not found`);
@@ -90,6 +92,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.getTokens(
       founduser.id,
       founduser.email,
+      founduser.role, // Assuming role is a property of User entity
     );
 
     // save the refresh token in the database
@@ -123,7 +126,7 @@ export class AuthService {
   async refreshTokens(id: number, refreshToken: string) {
     const founduser = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'email', 'hashedRefreshToken'],
+      select: ['id', 'email', 'hashedRefreshToken', 'role'],
     });
     if (!founduser) {
       throw new NotFoundException(`user wth id ${id}not found`);
@@ -144,6 +147,7 @@ export class AuthService {
     const { accessToken, refreshToken: newrefreshToken } = await this.getTokens(
       founduser.id,
       founduser.email,
+      founduser.role, // Assuming role is a property of User entity
     );
     //update the store refresh token
     await this.saveRefreshToken(founduser.id, newrefreshToken);
