@@ -6,7 +6,7 @@ import {
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Gender, Patient } from './entities/patient.entity';
+import {  Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Appointment } from 'src/appointments/entities/appointment.entity';

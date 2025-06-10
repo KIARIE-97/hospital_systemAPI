@@ -51,14 +51,16 @@ export class DoctorsController {
   }
 
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Action.Read, 'all'))
+  @CheckPolicies(
+    (ability) => ability.can(Action.Read, 'Doctor'),
+  )
   @Get()
   findAll() {
     return this.doctorsService.getDoctorAppointments();
   }
 
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Action.Read, 'Doctor'))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'all'))
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.doctorsService.findOne(id);

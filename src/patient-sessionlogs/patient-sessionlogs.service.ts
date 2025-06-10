@@ -1,57 +1,86 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PatientSessionlog } from './entities/patient-sessionlog.entity';
+import { Patient } from 'src/patients/entities/patient.entity';
 import { CreatePatientSessionlogDto } from './dto/create-patient-sessionlog.dto';
 import { UpdatePatientSessionlogDto } from './dto/update-patient-sessionlog.dto';
 
 @Injectable()
 export class PatientSessionlogsService {
-  private sessionlogs: CreatePatientSessionlogDto[] = [];
+  constructor(
+    @InjectRepository(PatientSessionlog)
+    private patientSessionlogRepository: Repository<PatientSessionlog>,
+    @InjectRepository(Patient)
+    private patientRepository: Repository<Patient>,
+  ) {}
 
-  create(
+  async create(
     createPatientSessionlogDto: CreatePatientSessionlogDto,
-  ): CreatePatientSessionlogDto {
-    const newLog = {
-      ...createPatientSessionlogDto,
-      id: this.sessionlogs.length + 1,
-    };
-    this.sessionlogs.push(newLog);
-    return newLog;
+  ): Promise<PatientSessionlog> {
+    // Find the patient
+    const patient = await this.patientRepository.findOne({
+      where: { id: createPatientSessionlogDto.patient_id },
+    });
+    if (!patient) {
+      throw new NotFoundException(
+        `Patient with id ${createPatientSessionlogDto.patient_id} not found`,
+      );
+    }
+
+    // Create and save the session log
+    const newLog = this.patientSessionlogRepository.create({
+      patient: createPatientSessionlogDto.patient_id,
+    });
+    return this.patientSessionlogRepository.save(newLog);
   }
 
-  findAll(): CreatePatientSessionlogDto[] {
-    return this.sessionlogs;
+  async findAll(): Promise<PatientSessionlog[]> {
+    return this.patientSessionlogRepository.find({
+      relations: ['patient'],
+    });
   }
 
-  findOne(id: number): CreatePatientSessionlogDto | undefined {
-    return this.sessionlogs.find((log) => log.id === id);
+  async findOne(id: number): Promise<PatientSessionlog | string> {
+    const log = await this.patientSessionlogRepository.findOne({
+      where: { id },
+      relations: ['patient'],
+    });
+    if (!log) {
+      return `No session log found with id ${id}`;
+    }
+    return log;
   }
 
-  update(
-    id: number,
-    updatePatientSessionlogDto: UpdatePatientSessionlogDto,
-  ): CreatePatientSessionlogDto | string {
-    const index = this.sessionlogs.findIndex((log) => log.id === id);
-    if (index === -1) return 'Session log not found';
-    const updatedLog = {
-      ...this.sessionlogs[index],
-      ...updatePatientSessionlogDto,
-    };
-    this.sessionlogs[index] = updatedLog;
-    return updatedLog;
+  // async update(
+  //   id: number,
+  //   updatePatientSessionlogDto: UpdatePatientSessionlogDto,
+  // ): Promise<PatientSessionlog | string> {
+  //   await this.patientSessionlogRepository.update(
+  //     id,
+  //     updatePatientSessionlogDto,
+  //   );
+  //   return this.findOne(id);
+  // }
+
+  async search(query: string): Promise<PatientSessionlog[]> {
+    return this.patientSessionlogRepository
+      .createQueryBuilder('sessionlog')
+      .leftJoinAndSelect('sessionlog.patient', 'patient')
+      .where('CAST(sessionlog.patient_id AS TEXT) LIKE :query', {
+        query: `%${query}%`,
+      })
+      .getMany();
   }
 
-  search(query: string): CreatePatientSessionlogDto[] {
-    return this.sessionlogs.filter(
-      (log) =>
-        log.patient_id?.toString().includes(query) ||
-        log.login_time?.toString().includes(query) ||
-        log.logout_time?.toString().includes(query),
-    );
-  }
-
-  remove(id: number): string {
-    const index = this.sessionlogs.findIndex((log) => log.id === id);
-    if (index === -1) return 'Session log not found';
-    this.sessionlogs.splice(index, 1);
-    return 'Session log removed successfully';
+  async remove(id: number): Promise<string> {
+    const log = await this.patientSessionlogRepository.findOne({
+      where: { id },
+    });
+    if (!log) {
+      return `No session log found with id ${id}`;
+    }
+    await this.patientSessionlogRepository.remove(log);
+    return `Session log with id ${id} has been removed`;
   }
 }

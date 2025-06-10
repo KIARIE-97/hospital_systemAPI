@@ -1,4 +1,5 @@
 import { Appointment } from 'src/appointments/entities/appointment.entity';
+import { DoctorSessionlog } from 'src/doctor-sessionlogs/entities/doctor-sessionlog.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
@@ -34,4 +36,13 @@ export class Doctor {
   })
   @JoinTable() // Important! This creates the join table in the database
   appointment: Relation<Appointment[]>;
+
+  @OneToMany(
+    () => DoctorSessionlog,
+    (doctorSessionlog) => doctorSessionlog.doctor,
+    {
+      nullable: true,
+    },
+  )
+  sessionlog: DoctorSessionlog[];
 }

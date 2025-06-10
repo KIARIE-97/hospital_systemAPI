@@ -1,59 +1,88 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { DoctorSessionlog } from './entities/doctor-sessionlog.entity';
+import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { CreateDoctorSessionlogDto } from './dto/create-doctor-sessionlog.dto';
 import { UpdateDoctorSessionlogDto } from './dto/update-doctor-sessionlog.dto';
 
 @Injectable()
 export class DoctorSessionlogsService {
-  private sessionlogs: CreateDoctorSessionlogDto[] = [];
+  constructor(
+    @InjectRepository(DoctorSessionlog)
+    private doctorSessionlogRepository: Repository<DoctorSessionlog>,
+    @InjectRepository(Doctor)
+    private doctorRepository: Repository<Doctor>,
+  ) {}
 
-  create(
+  async create(
     createDoctorSessionlogDto: CreateDoctorSessionlogDto,
-  ): CreateDoctorSessionlogDto {
-    const newLog = {
-      ...createDoctorSessionlogDto,
-      id: this.sessionlogs.length + 1,
-    };
-    this.sessionlogs.push(newLog);
-    return newLog;
-  }
-
-  findAll(): CreateDoctorSessionlogDto[] {
-    return this.sessionlogs;
-  }
-
-  findOne(id: number): CreateDoctorSessionlogDto | undefined {
-    return this.sessionlogs.find((log) => log.id === id);
-  }
-
-  update(
-    id: number,
-    updateDoctorSessionlogDto: UpdateDoctorSessionlogDto,
-  ): CreateDoctorSessionlogDto | string {
-    const index = this.sessionlogs.findIndex((log) => log.id === id);
-    if (index === -1) {
-      return 'Session log not found';
+  ): Promise<DoctorSessionlog> {
+    // Find the doctor
+    const doctor = await this.doctorRepository.findOne({
+      where: { id: createDoctorSessionlogDto.doctor_id },
+    });
+    if (!doctor) {
+      throw new NotFoundException(
+        `Doctor with id ${createDoctorSessionlogDto.doctor_id} not found`,
+      );
     }
-    const updatedLog = {
-      ...this.sessionlogs[index],
-      ...updateDoctorSessionlogDto,
-    };
-    this.sessionlogs[index] = updatedLog;
-    return updatedLog;
+
+    // Create and save the session log
+    const newLog = this.doctorSessionlogRepository.create({
+      doctor: createDoctorSessionlogDto.doctor_id,
+    });
+    return this.doctorSessionlogRepository.save(newLog);
   }
 
-  search(query: string): CreateDoctorSessionlogDto[] {
-    return this.sessionlogs.filter(
-      (log) =>
-        log.doctor_id?.toString().includes(query) ||
-        log.login_time?.toString().includes(query) ||
-        log.logout_time?.toString().includes(query),
-    );
+  async findAll(): Promise<DoctorSessionlog[]> {
+    return this.doctorSessionlogRepository.find({
+      relations: ['doctor'],
+    });
   }
 
-  remove(id: number): string {
-    const index = this.sessionlogs.findIndex((log) => log.id === id);
-    if (index === -1) return 'Session log not found';
-    this.sessionlogs.splice(index, 1);
-    return 'Session log removed successfully';
+  async findOne(id: number): Promise<DoctorSessionlog | string> {
+    const log = await this.doctorSessionlogRepository.findOne({
+      where: { id },
+      relations: ['doctor'],
+    });
+    if (!log) {
+      return `No session log found with id ${id}`;
+    }
+    return log;
+  }
+
+  // async update(
+  //   id: number,
+  //   updateDoctorSessionlogDto: CreateDoctorSessionlogDto,
+  // ): Promise<DoctorSessionlog | string> {
+  //   await this.doctorSessionlogRepository.update(id, updateDoctorSessionlogDto);
+  //   return this.findOne(id);
+  // }
+
+  async remove(id: number): Promise<string> {
+    const log = await this.doctorSessionlogRepository.findOne({
+      where: { id },
+      relations: ['doctor'],
+    });
+    if (!log) {
+      return `No session log found with id ${id}`;
+    }
+    // Clear the doctor reference before removing the session log
+    (log as any).doctor = null;
+    await this.doctorSessionlogRepository.save(log);
+    // Remove the session log
+    await this.doctorSessionlogRepository.remove(log);
+    return `Session log with id ${id} has been removed`;
+  }
+
+  async search(id: number): Promise<DoctorSessionlog[]> {
+    return this.doctorSessionlogRepository
+      .createQueryBuilder('sessionlog')
+      .leftJoinAndSelect('sessionlog.doctor', 'doctor')
+      .where('(sessionlog.doctor_id) LIKE :id', {
+ id: `%${id}%`,
+      })
+      .getMany();
   }
 }

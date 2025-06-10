@@ -12,6 +12,7 @@ import {
 import { DoctorSessionlogsService } from './doctor-sessionlogs.service';
 import { CreateDoctorSessionlogDto } from './dto/create-doctor-sessionlog.dto';
 import { UpdateDoctorSessionlogDto } from './dto/update-doctor-sessionlog.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('doctor-sessionlogs')
 export class DoctorSessionlogsController {
@@ -19,19 +20,22 @@ export class DoctorSessionlogsController {
     private readonly doctorSessionlogsService: DoctorSessionlogsService,
   ) {}
 
+  @Public()
   @Post()
   create(@Body() createDoctorSessionlogDto: CreateDoctorSessionlogDto) {
     return this.doctorSessionlogsService.create(createDoctorSessionlogDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.doctorSessionlogsService.findAll();
   }
 
-  @Get('search')
-  search(@Query('query') query: string) {
-    return this.doctorSessionlogsService.search(query);
+  @Public()
+  @Get('search/:id')
+  search(@Query('id', ParseIntPipe) id: number) {
+    return this.doctorSessionlogsService.search(id);
   }
 
   @Get(':id')
@@ -39,13 +43,13 @@ export class DoctorSessionlogsController {
     return this.doctorSessionlogsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateDoctorSessionlogDto: UpdateDoctorSessionlogDto,
-  ) {
-    return this.doctorSessionlogsService.update(id, updateDoctorSessionlogDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() updateDoctorSessionlogDto: UpdateDoctorSessionlogDto,
+  // ) {
+  //   return this.doctorSessionlogsService.update(id, updateDoctorSessionlogDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {

@@ -3,7 +3,13 @@ import { Injectable } from "@nestjs/common";
 import { Role, User } from "src/users/entities/user.entity";
 import { Action } from "./action.enum";
 
-type Subject= 'User' | 'Patient' | 'Doctor' | 'Appointment' | 'all';
+type Subject =
+  | 'User'
+  | 'Patient'
+  | 'Doctor'
+  | 'Appointment'
+  | 'all'
+  | 'Contactquery';
 
 export type AppAbility = PureAbility<[Action, Subject]>
 
@@ -25,7 +31,10 @@ export class CaslAbilityFactory {
             can(Action.Update, 'Patient');
         }else if (user.role === Role.PATIENT) {
             can(Action.Read, ['User', 'Doctor']);
-            can([Action.Create, Action.Update, Action.Read], 'Appointment');
+            can(
+              [Action.Create, Action.Update, Action.Read],
+              ['Appointment', 'Contactquery'],
+            );
             can([Action.Read, Action.Update], 'Patient');
         }
         return build();

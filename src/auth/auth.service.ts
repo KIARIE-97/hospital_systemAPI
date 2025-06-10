@@ -77,8 +77,6 @@ export class AuthService {
       throw new Error(`User with email ${createAuthDto.email} not found`);
     }
     // compare hashed password with the one in the database
-    console.log('found user',founduser.password);
-    console.log('passed',createAuthDto.password);
     const foundpassword = await Bcrypt.compare(
       createAuthDto.password,
       founduser.password,

@@ -1,4 +1,5 @@
 import { Appointment } from 'src/appointments/entities/appointment.entity';
+import { ContactQuery } from 'src/contact-queries/entities/contact-query.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -40,6 +41,15 @@ export class Patient {
   @JoinColumn()
   user: Relation<User>;
 
-  @OneToMany(() => Appointment, (appointment) => appointment.patient, {nullable: true})
+  @OneToMany(() => Appointment, (appointment) => appointment.patient, {
+    nullable: true,
+  })
   appointment: Appointment[];
+
+  @OneToMany(() => ContactQuery, (contactQuery) => contactQuery.patient, {
+    nullable: true,
+  })
+  contactQuery: ContactQuery[];
+
+  
 }

@@ -1,31 +1,38 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsNotEmpty,
   IsDate,
   IsOptional,
   IsNumber,
+  IsEnum,
+  IsDateString,
+  IsEmail,
+  IsInt,
 } from 'class-validator';
+import { ContactStatus } from '../entities/contact-query.entity';
 export class CreateContactQueryDto {
-  @IsOptional()
-  @IsNumber()
-  id: number;
+ @ApiProperty()
+  @IsInt()
+  patient_id: number;
 
-  @IsNotEmpty()
+  @ApiProperty()
   @IsString()
   user_name: string;
 
-  @IsString()
+  @ApiProperty()
+  @IsEmail()
   email: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   query_message: string;
 
-  @IsNotEmpty()
-  @IsString()
-  status: string;
-
-  @IsOptional()
-  @IsDate()
-  submitted_date: Date;
+  @ApiProperty()
+  @IsEnum(ContactStatus, {
+    message:
+      'status must be one of the following: pending, confirmed or cancelled',
+  })
+  status: ContactStatus = ContactStatus.PENDING;
 }

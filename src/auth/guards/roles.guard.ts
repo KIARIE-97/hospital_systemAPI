@@ -15,8 +15,6 @@ interface UserRequest extends Request{
 export class RolesGuard implements CanActivate {
     constructor(
         private reflector: Reflector, // Import Reflector to access metadata
-        @InjectRepository(User) // Inject the User repository to access user data
-        private userRepository: Repository<User>,
     ) {}
     async canActivate(context: ExecutionContext):Promise<boolean> {
         const reqRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [

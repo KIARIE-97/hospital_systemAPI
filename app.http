@@ -22,8 +22,8 @@ Content-Type: application/json
 
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJyb2xlIjoiZG9jdG9yIiwiaWF0IjoxNzQ5NDkzNTczLCJleHAiOjE3NDk0OTQ0NzN9.b2dSnyVtxnMyCHjht0y8XLSC6tNSnXxH7LWb_3g1Tq0
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDk3MTE1Njh9.2X3vV96RhZimPqPLu4gjtiLVkUTpGMWvw_Z_6ENWS_4
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJyb2xlIjoiZG9jdG9yIiwiaWF0IjoxNzQ5NTYzOTMxLCJleHAiOjE3NDk1NjQ4MzF9.7CZUdOHPnmIukqNus8ySUpVGi_6J_QeDR-LfJ1qZGIY
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE0LCJlbWFpbCI6ImtpYXJpc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk1NjExNTQsImV4cCI6MTc1MDE2NTk1NH0.oMzaIbpFZ2GJ-wnF65H1n2UBOZ3KKgBKP9AW2vPewqA
 ###
 POST  {{URL}}/auth/signout/13
 Authorization: Bearer {{accessToken}} 
@@ -51,12 +51,24 @@ Authorization: Bearer {{accessToken}}
 GET {{URL}}/appointments
 Authorization: Bearer {{accessToken}} 
 
+
+###
+GET {{URL}}/contact-queries
+Authorization: Bearer {{accessToken}} 
+
+###
+GET {{URL}}/contact-queries/1
+Authorization: Bearer {{accessToken}} 
+
+###
+GET {{URL}}/contact-queries/search/Janet
+
 ###
 GET {{URL}}/patients/22
 Authorization: Bearer {{accessToken}} 
 
 ###
-GET {{URL}}/doctors/22
+GET {{URL}}/doctors/2
 
 ###
 GET {{URL}}/users/13
@@ -67,6 +79,19 @@ GET {{URL}}/patients/search?query=jane
 
 ### 
 POST {{URL}}/doctors/21/appointment/58
+
+
+###
+POST  {{URL}}/contact-queries
+Content-Type: application/json
+
+{
+    "patient_id": 2,
+    "user_name": "Janet", 
+    "email": "jane@gmail.com",
+    "query_message": "I have a query regarding my appointment",
+    "status": "pending"
+}
 
 ###
 POST {{URL}}/patients
