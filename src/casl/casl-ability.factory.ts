@@ -27,7 +27,7 @@ export class CaslAbilityFactory {
             can(Action.Create, 'Appointment');
             can(Action.Update, 'Appointment');
             can(Action.Delete, ['Appointment', 'Doctor']);
-            can(Action.Read, 'Patient');
+            can(Action.Read, 'Patient'); 
             can(Action.Update, 'Patient');
         }else if (user.role === Role.PATIENT) {
             can(Action.Read, ['User', 'Doctor']);

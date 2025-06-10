@@ -16,6 +16,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Public } from './decorators/public.decorator';
 import { AtGuard } from './guards';
 import { RtGuard } from './guards/rf.guard';
+import { ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 export interface RequestWithUser extends Request {
   user: {
     sub: number;
@@ -24,19 +25,52 @@ export interface RequestWithUser extends Request {
   };
 }
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   //auth/signin
   @Public()
+  @ApiOperation({
+    summary: 'User login',
+    description: 'Authenticates a user and returns access and refresh tokens',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: {
+          type: 'string',
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        },
+        refreshToken: {
+          type: 'string',
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        },
+      },
+    },
+  })
+  @ApiBadRequestResponse({ description: 'Invalid credentials' })
+  @ApiUnauthorizedResponse({ description: 'Authentication failed' })
   @Post('signin')
   signIn(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.signIn(createAuthDto);
   }
 
   //auth/signout
-  
+  @ApiOperation({
+    summary: 'User logout',
+    description: 'Logs out a user by invalidating their refresh token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Logout successful',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid user ID' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @Post('signout/:id')
   signOut(@Param('id', ParseIntPipe) id: number) {
     console.log('Signout hit');
@@ -46,11 +80,14 @@ export class AuthController {
   @Public()
   @UseGuards(RtGuard)
   @Post('refresh')
-  refreshTokens(@Query('id', ParseIntPipe) id: number, @Req() req: RequestWithUser) {
+  refreshTokens(
+    @Query('id', ParseIntPipe) id: number,
+    @Req() req: RequestWithUser,
+  ) {
     console.log('Refresh hit');
     const user = req.user;
-    console.log('User from request:', typeof (user.sub));
-    console.log('User ID from query:', typeof (id));
+    console.log('User from request:', typeof user.sub);
+    console.log('User ID from query:', typeof id);
     console.log(' request:', user.sub !== id);
     if (user.sub !== id) {
       throw new UnauthorizedException('Invalid user');

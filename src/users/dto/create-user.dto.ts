@@ -11,15 +11,26 @@ export class CreateUserDto {
   @IsString()
   last_name: string;
 
-  @ApiProperty()
+  @ApiProperty( {description: 'The email of the user', 
+    example: 'example@mail.com', 
+    required: true 
+  })
   @IsEmail()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty(
+    {description: 'The unique identifier for the user', 
+    example: 123, 
+    required: true 
+  })
   @IsString()
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The phone number of the user',
+    example: '+1234567890',
+    required: true,
+  })
   @IsString()
   phone_number: string;
 

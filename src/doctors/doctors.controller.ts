@@ -17,8 +17,10 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator';
 import { Action } from 'src/casl/action.enum';
 import { PoliciesGuard } from 'src/casl/guards/policies.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('doctors')
+@ApiBearerAuth()
 @Controller('doctors')
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
@@ -51,16 +53,14 @@ export class DoctorsController {
   }
 
   @UseGuards(PoliciesGuard)
-  @CheckPolicies(
-    (ability) => ability.can(Action.Read, 'Doctor'),
-  )
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Doctor'))
   @Get()
   findAll() {
     return this.doctorsService.getDoctorAppointments();
   }
 
   @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability) => ability.can(Action.Read, 'all'))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Doctor'))
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.doctorsService.findOne(id);

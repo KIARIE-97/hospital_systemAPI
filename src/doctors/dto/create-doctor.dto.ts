@@ -7,7 +7,10 @@ import {
   IsOptional,
 } from 'class-validator';
 export class CreateDoctorDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The specialization of the doctor',
+    example: 'surgeon',
+  })
   @IsNotEmpty()
   @IsString()
   specialty: string;

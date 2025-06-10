@@ -12,11 +12,20 @@ import {
 import { Gender } from '../entities/patient.entity';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreatePatientDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'The enrollment date of the student',
+    example: '2023-09-01T00:00:00.000Z',
+    type: String,
+    format: 'date-time',
+  })
   @IsDateString()
   dob: string;
 
-  @ApiProperty()
+  @ApiProperty(
+    {description: 'the gender of patient',
+      example: 'male, female, other',
+    }
+  )
   @IsString()
   @IsEnum(Gender, {
     message: 'gender must be one of the following: male, female or other',

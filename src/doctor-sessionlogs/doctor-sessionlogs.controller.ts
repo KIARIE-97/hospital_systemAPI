@@ -13,7 +13,10 @@ import { DoctorSessionlogsService } from './doctor-sessionlogs.service';
 import { CreateDoctorSessionlogDto } from './dto/create-doctor-sessionlog.dto';
 import { UpdateDoctorSessionlogDto } from './dto/update-doctor-sessionlog.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('session-logs')
+@ApiBearerAuth()
 @Controller('doctor-sessionlogs')
 export class DoctorSessionlogsController {
   constructor(

@@ -123,12 +123,7 @@ export class AdminService {
   }
 //
   // Reset password for a user
-  async resetUserPassword(
-    user_id: number,
-    newPassword: string,
-  ): Promise<string> {
-    return this.userService.resetPassword(user_id, newPassword);
-  }
+  
 
   // Remove admin and (optionally) their user
   async remove(id: number): Promise<string> {

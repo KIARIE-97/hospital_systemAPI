@@ -16,7 +16,10 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { PoliciesGuard } from 'src/casl/guards/policies.guard';
 import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator';
 import { Action } from 'src/casl/action.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('contact-queries')
+@ApiBearerAuth()
 @Controller('contact-queries')
 export class ContactQueriesController {
   constructor(private readonly contactQueriesService: ContactQueriesService) {}
@@ -27,9 +30,7 @@ export class ContactQueriesController {
   }
 
   @UseGuards(PoliciesGuard)
-   @CheckPolicies(
-     (ability) => ability.can(Action.Read, 'Contactquery'),
-   )
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Contactquery'))
   @Get()
   findAll() {
     return this.contactQueriesService.findAll();
@@ -40,13 +41,12 @@ export class ContactQueriesController {
     return this.contactQueriesService.search(query);
   }
 
-  
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Contactquery'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contactQueriesService.findOne(Number(id));
   }
-
- 
 
   @Patch(':id')
   update(

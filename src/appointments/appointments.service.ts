@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { Patient } from 'src/patients/entities/patient.entity';
 import { Repository } from 'typeorm';
 import { throwError } from 'rxjs';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Role, User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AppointmentsService {
@@ -68,8 +69,7 @@ export class AppointmentsService {
     }
 
     // Find the doctor
-    const doctor = await this.doctorRepository.findOneBy({ id: doctor_id
-     });
+    const doctor = await this.doctorRepository.findOneBy({ id: doctor_id });
     if (!doctor) {
       throw new NotFoundException(`doctor with ID ${doctor_id} not found`);
     }
@@ -123,29 +123,55 @@ export class AppointmentsService {
     return await this.findOne(id);
   }
 
-  async remove(id: number): Promise<string> {
-    try {
-      // Load the appointment with its related doctors
-      const appointment = await this.appointmentRepository.findOne({
-        where: { id },
-        relations: ['doctor'],
-      });
+  async remove(id: number, currentUser: User): Promise<any> {
+    const appointment = await this.appointmentRepository.findOne({
+      where: { id },
+      relations: ['patient', 'doctor'],
+    });
 
-      if (!appointment) {
-        return `No appointment found with id ${id}`;
+    if (!appointment) {
+      throw new NotFoundException('Appointment not found');
+    }
+
+    const isAdmin = currentUser.role === Role.ADMIN;
+    const isPatient = currentUser.role === Role.PATIENT;
+    const isDoctor = currentUser.role === Role.DOCTOR;
+
+    // ✅ Patient can cancel own appointment only (before 24 hrs)
+    if (isPatient) {
+      const isOwner = appointment.patient === currentUser.id;
+      const cancelDeadline = new Date(appointment.appointment_date);
+      cancelDeadline.setHours(cancelDeadline.getHours() - 24);
+      const now = new Date();
+
+      if (!isOwner) {
+        throw new ForbiddenException(
+          'You can only cancel your own appointments',
+        );
       }
 
-      // Unlink the appointment from doctors
-      appointment.doctor = [];
-      await this.appointmentRepository.save(appointment);
-
-      // Now delete the appointment
-      await this.appointmentRepository.remove(appointment);
-
-      return `Appointment with id ${id} has been removed`;
-    } catch (error) {
-      console.error('Error removing appointment:', error);
-      throw new Error(`Failed to remove appointment with id ${id}`);
+      if (now > cancelDeadline) {
+        throw new BadRequestException(
+          'Cannot cancel within 24 hours of the appointment',
+        );
+      }
     }
+
+    // ✅ Doctor can cancel own appointment
+    if (
+      isDoctor &&
+      (!Array.isArray(appointment.doctor) ||
+        !appointment.doctor.some((doc) => doc.id === currentUser.id))
+    ) {
+      throw new ForbiddenException(
+        'You can only cancel appointments assigned to you',
+      );
+    }
+
+    // Instead of deleting, mark it cancelled
+    appointment.status = AStatus.CANCELLED;
+    await this.appointmentRepository.save(appointment);
+
+    return { message: 'Appointment cancelled successfully' };
   }
 }
