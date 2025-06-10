@@ -19,6 +19,8 @@ import { createKeyv } from '@keyv/redis';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards';
+import { CaslModule } from './casl/casl.module';
+import { Throttle, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -57,6 +59,16 @@ import { AtGuard } from './auth/guards';
     LogsModule,
     AdminModule,
     AuthModule,
+    CaslModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => [{ 
+        ttl: configService.getOrThrow<number>('THROTTLE_TTL', { infer: true }),
+        limit: configService.getOrThrow<number>('THROTTLE_LIMIT', { infer: true }),
+        ignoreUserAgents: [/^curl\//], // Ignore specific user agents
+      }],
+    })
   ],
   controllers: [],
   providers: [
@@ -67,6 +79,10 @@ import { AtGuard } from './auth/guards';
     {
       provide: APP_GUARD,
       useClass: AtGuard, // Use AuthModule to provide global authentication guard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard, // Use ThrottlerModule to provide global rate limiting
     },
   ],
 })

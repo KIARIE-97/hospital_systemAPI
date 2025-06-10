@@ -4,9 +4,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AllExceptionsFilter } from './http.exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  //protects app from well-known vulnerabilities by setting various HTTP headers
+app.use(helmet())
+
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()

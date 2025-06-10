@@ -8,13 +8,17 @@ import {
   ParseIntPipe,
   Query,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator';
+import { Action } from 'src/casl/action.enum';
+import { PoliciesGuard } from 'src/casl/guards/policies.guard';
 
-@Public()
+
 @Controller('doctors')
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
@@ -46,11 +50,15 @@ export class DoctorsController {
     );
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'all'))
   @Get()
   findAll() {
     return this.doctorsService.getDoctorAppointments();
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Doctor'))
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.doctorsService.findOne(id);
@@ -64,6 +72,8 @@ export class DoctorsController {
     return this.doctorsService.update(id, updateDoctorDto);
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Doctor'))
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.doctorsService.remove(id);

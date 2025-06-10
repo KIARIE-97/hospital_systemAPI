@@ -16,13 +16,13 @@ POST {{URL}}/auth/signin
 Content-Type: application/json
 
 {
-    "email": "kiaris@gmail.com",
+    "email": "joe@gmail.com",
     "password": "12345"
 }
 
 
 #############################
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE0LCJlbWFpbCI6ImtpYXJpc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk0NjA4MzcsImV4cCI6MTc0OTQ2MTczN30.JHe2UlpK4OHIjTkRxnbnURaXqYQz38Hady9P1szEf6k
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEyLCJlbWFpbCI6ImpvZUBnbWFpbC5jb20iLCJyb2xlIjoiZG9jdG9yIiwiaWF0IjoxNzQ5NDkzNTczLCJleHAiOjE3NDk0OTQ0NzN9.b2dSnyVtxnMyCHjht0y8XLSC6tNSnXxH7LWb_3g1Tq0
 @refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEzLCJlbWFpbCI6InRpZmZAZ21haWwuY29tIiwiaWF0IjoxNzQ5MTA2NzY4LCJleHAiOjE3NDk3MTE1Njh9.2X3vV96RhZimPqPLu4gjtiLVkUTpGMWvw_Z_6ENWS_4
 ###
 POST  {{URL}}/auth/signout/13
@@ -125,7 +125,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{URL}}/doctors/20
+PATCH {{URL}}/doctors/8
 Content-Type: application/json
 
 {
@@ -149,7 +149,8 @@ DELETE {{URL}}/patients/20
 DELETE {{URL}}/users/17
 
 ###
-DELETE {{URL}}/doctors/48
+DELETE {{URL}}/doctors/3
+Authorization: Bearer {{accessToken}}
 
 ###
 DELETE {{URL}}/appointments/72
