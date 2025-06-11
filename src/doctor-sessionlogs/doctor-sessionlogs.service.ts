@@ -15,24 +15,39 @@ export class DoctorSessionlogsService {
     private doctorRepository: Repository<Doctor>,
   ) {}
 
-  async create(
+  async logDoctorSession(
     createDoctorSessionlogDto: CreateDoctorSessionlogDto,
-  ): Promise<DoctorSessionlog> {
-    // Find the doctor
-    const doctor = await this.doctorRepository.findOne({
+  ) {
+    const existingdoctor = await this.doctorRepository.findOne({
       where: { id: createDoctorSessionlogDto.doctor_id },
     });
-    if (!doctor) {
+
+    if (!existingdoctor) {
       throw new NotFoundException(
-        `Doctor with id ${createDoctorSessionlogDto.doctor_id} not found`,
+        `Patient with id ${createDoctorSessionlogDto.doctor_id} not found`,
       );
     }
 
-    // Create and save the session log
-    const newLog = this.doctorSessionlogRepository.create({
-      doctor: createDoctorSessionlogDto.doctor_id,
+    const sessionLog = this.doctorSessionlogRepository.create({
+      login_time: new Date(createDoctorSessionlogDto.login_time),
+      logout_time: new Date(createDoctorSessionlogDto.logout_time),
+      doctor: existingdoctor.id,
     });
-    return this.doctorSessionlogRepository.save(newLog);
+
+    const saved = await this.doctorSessionlogRepository.save(sessionLog);
+    return saved.id;
+  }
+async updateLogoutTime(sessionId: number) {
+    const session = await this.doctorSessionlogRepository.findOne({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new NotFoundException(`Session with id ${sessionId} not found`);
+    }
+
+    session.logout_time = new Date(); // set logout to now
+    return this.doctorSessionlogRepository.save(session);
   }
 
   async findAll(): Promise<DoctorSessionlog[]> {
@@ -81,7 +96,7 @@ export class DoctorSessionlogsService {
       .createQueryBuilder('sessionlog')
       .leftJoinAndSelect('sessionlog.doctor', 'doctor')
       .where('(sessionlog.doctor_id) LIKE :id', {
- id: `%${id}%`,
+        id: `%${id}%`,
       })
       .getMany();
   }

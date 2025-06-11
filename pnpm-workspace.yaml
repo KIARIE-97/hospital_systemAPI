@@ -1,0 +1,6 @@
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@scarf/scarf'
+  - '@swc/core'
+  - bcrypt
+  # manage monorepo dependencies.i.e you can use `pnpm install` to install all dependencies in the monorepo

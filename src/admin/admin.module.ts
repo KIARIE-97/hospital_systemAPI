@@ -13,11 +13,13 @@ import { AppointmentsService } from 'src/appointments/appointments.service';
 import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([User, Admin, Appointment, Doctor, Patient]),
+    MailerModule,
   ],
   controllers: [AdminController],
   providers: [

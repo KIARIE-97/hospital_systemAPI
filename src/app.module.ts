@@ -21,9 +21,33 @@ import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards';
 import { CaslModule } from './casl/casl.module';
 import { Throttle, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+// import { MailerModule } from './mailer/mailer.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Module({
   imports: [
+    // MailerModule.forRoot({
+    //   transport: {
+    //     service: 'gmail', // SMTP provider
+    //     auth: {
+    //       user: process.env.GMAIL_USER, 
+    //       pass: process.env.GMAIL_PASS, //app password for Gmail
+    //     },
+    //   },
+    //   defaults: {
+    //     from: '"No Reply" sarahwanjiruki1@gmail.com', // Default sender address
+    //   },
+    //   template: {
+    //     // Path to your template files
+    //     dir: join(__dirname, 'src', 'templates'), // folder with your .hbs files
+    //     adapter: new HandlebarsAdapter(), // or PugAdapter, EjsAdapter
+    //     options: {
+    //       strict: true,
+    //     },
+    //   },
+    // }),
     // Global cache configuration
     CacheModule.registerAsync({
       imports: [ConfigModule],
@@ -63,12 +87,19 @@ import { Throttle, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => [{ 
-        ttl: configService.getOrThrow<number>('THROTTLE_TTL', { infer: true }),
-        limit: configService.getOrThrow<number>('THROTTLE_LIMIT', { infer: true }),
-        ignoreUserAgents: [/^curl\//], // Ignore specific user agents
-      }],
-    })
+      useFactory: (configService: ConfigService) => [
+        {
+          ttl: configService.getOrThrow<number>('THROTTLE_TTL', {
+            infer: true,
+          }),
+          limit: configService.getOrThrow<number>('THROTTLE_LIMIT', {
+            infer: true,
+          }),
+          ignoreUserAgents: [/^curl\//], // Ignore specific user agents
+        },
+      ],
+    }),
+    MailerModule,
   ],
   controllers: [],
   providers: [

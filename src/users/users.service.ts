@@ -5,11 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
+import { AppMailerService } from 'src/mailer/mailer.service';
+
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly appMailerService: AppMailerService,
   ) {}
   private async hashData(data: string): Promise<string> {
     const salt = await Bcrypt.genSalt(10);
@@ -95,6 +98,18 @@ export class UsersService {
     }
     user.password = await this.hashData(newPassword);
     await this.userRepository.save(user);
+    // Send notification email
+    try {
+      await this.appMailerService.sendPassresetMail(
+        user.email,
+        user.first_name,
+      );
+    } catch (err) {
+      console.error('Error sending email:', err);
+    }
+    console.log(
+      `Password reset for user with id ${user_id} and email ${user.email}`,
+    );
     return 'Password reset successfully';
   }
 }

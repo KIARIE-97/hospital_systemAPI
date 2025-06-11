@@ -10,15 +10,21 @@ import { ConfigService } from '@nestjs/config';
 import { PatientSessionlogsService } from 'src/patient-sessionlogs/patient-sessionlogs.service';
 import { PatientSessionlog } from 'src/patient-sessionlogs/entities/patient-sessionlog.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
+import { DoctorSessionlog } from 'src/doctor-sessionlogs/entities/doctor-sessionlog.entity';
+import { Doctor } from 'src/doctors/entities/doctor.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(PatientSessionlog)
-      private patientSessionlogRepository: Repository<PatientSessionlog>,
+    private patientSessionlogRepository: Repository<PatientSessionlog>,
     @InjectRepository(Patient)
-      private patientRepository: Repository<Patient>,
+    private patientRepository: Repository<Patient>,
+    @InjectRepository(Doctor)
+    private doctorRepository: Repository<Doctor>,
+    @InjectRepository(DoctorSessionlog)
+    private doctorSessionlogRepository: Repository<DoctorSessionlog>,
     private jwtService: JwtService,
     private configService: ConfigService, // Assuming ConfigService is imported and configured
     private patientSessionlogService: PatientSessionlogsService, // Inject PatientSessionlogsService
@@ -99,7 +105,7 @@ export class AuthService {
         where: { user: { id: founduser.id } },
         relations: ['user'],
       });
-console.log('Patient found:', patient);
+      console.log('Patient found:', patient);
       if (patient) {
         const sessionLogData = {
           patient_id: patient.id,
@@ -108,6 +114,25 @@ console.log('Patient found:', patient);
         };
         await this.patientSessionlogService.logPatientSession(sessionLogData);
         console.log('Patient session logged:', sessionLogData);
+      }
+    } else if (founduser.role === Role.DOCTOR) {
+      const doctor = await this.doctorRepository.findOne({
+        where: { user: { id: founduser.id } },
+        relations: ['user'],
+      });
+      console.log('Doctor found:', doctor);
+      if (doctor) {
+        await this.doctorSessionlogRepository.save({
+          doctor: doctor.id,
+          login_time: new Date(),
+          logout_time: new Date(),
+        });
+        // For now, just log the doctor session data.
+        console.log('Doctor session is logged:', {
+          doctor: doctor.id,
+          login_time: new Date(),
+          logout_time: new Date(),
+        });
       }
     }
     // if the user is found and the password matches
@@ -157,6 +182,17 @@ console.log('Patient found:', patient);
       if (latestSession) {
         latestSession.logout_time = new Date();
         await this.patientSessionlogRepository.save(latestSession);
+      }
+    } else if (user?.role === Role.DOCTOR) {
+      // Handle doctor session logout
+      const latestSession = await this.doctorSessionlogRepository.findOne({
+        where: { doctor: user_id },
+        order: { login_time: 'DESC' },
+      });
+
+      if (latestSession) {
+        latestSession.logout_time = new Date();
+        await this.doctorSessionlogRepository.save(latestSession);
       }
     }
     return { message: `User with id: ${user_id} signed out successfully ✔️` };

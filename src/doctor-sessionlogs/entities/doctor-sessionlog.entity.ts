@@ -3,13 +3,13 @@ import { Doctor } from 'src/doctors/entities/doctor.entity';
 
 @Entity()
 export class DoctorSessionlog {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp')
   login_time: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', { nullable: true })
   logout_time: Date;
 
   @ManyToOne(() => Doctor, (doctor) => doctor.id, { nullable: true })

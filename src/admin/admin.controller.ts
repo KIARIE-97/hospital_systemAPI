@@ -13,7 +13,7 @@ import {
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { CreateDoctorDto } from 'src/doctors/dto/create-doctor.dto';
 import { UpdateDoctorDto } from 'src/doctors/dto/update-doctor.dto';
 import { UpdatePatientDto } from 'src/patients/dto/update-patient.dto';
@@ -32,84 +32,49 @@ export class AdminController {
 
   @Roles(Role.ADMIN)
   @Post()
+  @ApiOperation({
+    summary: 'Create a new admin',
+    description: 'Creates a new admin with the provided details.',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+    @ApiUnauthorizedResponse({ description: 'Authentication required' })
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
-
-  // @Post('doctors')
-  // createDoctor(@Body() createDoctorDto: CreateDoctorDto) {
-  //   return this.adminService.createDoctor(createDoctorDto);
-  // }
-  // @Post('doctors/:doctor_id/appointment/:appointment_id')
-  // addAppointmenttoDoctor(
-  //   @Param('doctor_id', ParseIntPipe) doctor_id: number,
-  //   @Param('appointment_id', ParseIntPipe) appointment_id: number,
-  // ) {
-  //   return this.adminService.addAppointmentToDoctor(doctor_id, appointment_id);
-  // }
-  // @Get()
-  // findAll() {
-  //   return this.adminService.findAll();
-  // }
-
-  // @Get('users')
-  // getAllUsers() {
-  //   return this.adminService.getAllUsers();
-  // }
-
-  // @Get('doctors')
-  // getAllDoctors() {
-  //   return this.adminService.getAllDoctors();
-  // }
-
-  // @Get('patients')
-  // async getAllPatients() {
-  //   try {
-  //     return await this.adminService.getAllPatients();
-  //   } catch (error) {
-  //     console.error('Admin patient fetch error:', error);
-  //     throw error;
-  //   }
-  // }
-
-  // @Get('appointments')
-  // getAllAppointments() {
-  //   return this.adminService.getAllAppointments();
-  // }
-  // @Get('patients/search')
-  // findPatients(@Query('search') search?: string) {
-  //   return this.adminService.findPatients(search);
-  // }
   @Roles(Role.ADMIN)
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get admin by ID',
+    description: 'Retrieves an admin by their unique ID.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
   findOne(@Param('id') id: string) {
     return this.adminService.findOne(+id);
   }
 
   @Roles(Role.ADMIN)
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update admin details',
+    description: 'Updates the details of an existing admin.',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
     return this.adminService.update(id, updateAdminDto);
   }
-  // @Patch('doctors/:id')
-  // updateDoctor(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() updateDoctorDto: UpdateDoctorDto,
-  // ) {
-  //   return this.adminService.updateDoctor(id, updateDoctorDto);
-  // }
-  // @Patch('patients/:id')
-  // updatePatient(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() updatePatientDto: UpdatePatientDto,
-  // ) {
-  //   return this.adminService.updatePatient(id, updatePatientDto);
-  // }
   @Roles(Role.ADMIN)
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete an admin',
+    description: 'Deletes an admin by their unique ID.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
   remove(@Param('id') id: string) {
     return this.adminService.remove(+id);
   }

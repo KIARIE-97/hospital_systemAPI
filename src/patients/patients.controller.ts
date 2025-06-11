@@ -67,6 +67,12 @@ export class PatientsController {
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get patient by ID',
+    description: 'Retrieves a patient by their unique ID.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid patient ID' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.patientsService.findOne(id);
   }
@@ -88,6 +94,12 @@ export class PatientsController {
 
   @Roles(Role.ADMIN, Role.PATIENT)
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete a patient',
+    description: 'Deletes a patient by their unique ID.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid patient ID' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.patientsService.remove(id);
   }

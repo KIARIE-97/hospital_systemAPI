@@ -15,7 +15,7 @@ import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -39,7 +39,13 @@ export class AppointmentsController {
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Post(':appointment_id/doctor/:doctor_id')
-  addStudentToCourse(
+  @ApiOperation({
+    summary: 'Add an appointment to a doctor',
+    description: 'Associates an appointment with a specific doctor.',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+    @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  addAppointmentTodoctor(
     @Param('appointment_id', ParseIntPipe) appointment_id: number,
     @Param('doctor_id', ParseIntPipe) doctor_id: number,
   ) {
@@ -51,18 +57,36 @@ export class AppointmentsController {
 
   @Roles(Role.ADMIN)
   @Get()
+  @ApiOperation({
+    summary: 'Get all appointments',
+    description: 'Retrieves a list of all appointments.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
   findAll() {
     return this.appointmentsService.findAll();
   }
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get appointment by ID',
+    description: 'Retrieves an appointment by its unique ID.',
+  })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid appointment ID' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.appointmentsService.findOne(id);
   }
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update an appointment',
+    description: 'Updates the details of an existing appointment.',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAppointmentDto: UpdateAppointmentDto,
@@ -72,6 +96,12 @@ export class AppointmentsController {
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete an appointment',
+    description: 'Deletes an appointment by its unique ID.',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   remove(@Param('id', ParseIntPipe) id: number, @Req() req) {
     return this.appointmentsService.remove(id, req.user);
   }
