@@ -17,6 +17,9 @@ import { Public } from './decorators/public.decorator';
 import { AtGuard } from './guards';
 import { RtGuard } from './guards/rf.guard';
 import { ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Roles } from './decorators/role.decorator';
+import { Role } from 'src/users/entities/user.entity';
+import { RolesGuard } from './guards/roles.guard';
 export interface RequestWithUser extends Request {
   user: {
     sub: number;
@@ -24,7 +27,7 @@ export interface RequestWithUser extends Request {
     refreshToken: string;
   };
 }
-
+@UseGuards(RolesGuard)
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -61,6 +64,7 @@ export class AuthController {
   }
 
   //auth/signout
+  @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @ApiOperation({
     summary: 'User logout',
     description: 'Logs out a user by invalidating their refresh token',

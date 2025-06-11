@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -20,8 +21,9 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@Public()
+@UseGuards(RolesGuard)
 @ApiBearerAuth('access-token')
 @ApiTags('admin')
 @Controller('admin')

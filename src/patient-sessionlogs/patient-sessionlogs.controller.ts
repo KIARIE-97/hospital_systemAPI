@@ -24,10 +24,10 @@ export class PatientSessionlogsController {
   ) {}
 
   @Public()
-  @Post()
-  create(@Body() createPatientSessionlogDto: CreatePatientSessionlogDto) {
-    return this.patientSessionlogsService.create(createPatientSessionlogDto);
-  }
+  // @Post()
+  // create(@Body() createPatientSessionlogDto: CreatePatientSessionlogDto) {
+  //   return this.patientSessionlogsService.create(createPatientSessionlogDto);
+  // }
 
   @Public()
   @Get()

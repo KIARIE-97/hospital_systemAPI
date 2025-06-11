@@ -8,6 +8,8 @@ import {
   Patch,
   Query,
   ParseIntPipe,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
@@ -16,9 +18,11 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from 'src/users/entities/user.entity';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
+@UseGuards(RolesGuard)
 @ApiTags('appointments')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
@@ -27,7 +31,8 @@ export class AppointmentsController {
   @Post()
   @ApiOperation({
     summary: 'Create a new appointment',
-    description: 'Creates a new appointment with the provided details.',})
+    description: 'Creates a new appointment with the provided details.',
+  })
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentsService.create(createAppointmentDto);
   }
@@ -67,7 +72,7 @@ export class AppointmentsController {
 
   @Roles(Role.ADMIN, Role.DOCTOR, Role.PATIENT)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.appointmentsService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @Req() req) {
+    return this.appointmentsService.remove(id, req.user);
   }
 }

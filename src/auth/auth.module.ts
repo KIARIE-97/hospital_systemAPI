@@ -7,17 +7,20 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { AtStrategy, RtStrategy } from './strategies';
 import { PassportModule } from '@nestjs/passport';
+import { PatientSessionlog } from 'src/patient-sessionlogs/entities/patient-sessionlog.entity';
+import { Patient } from 'src/patients/entities/patient.entity';
+import { PatientSessionlogsService } from 'src/patient-sessionlogs/patient-sessionlogs.service';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, PatientSessionlog, Patient]),
     JwtModule.register({
       global: true,
     }),
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RtStrategy],
+  providers: [AuthService, AtStrategy, RtStrategy, PatientSessionlogsService],
 })
 export class AuthModule {}

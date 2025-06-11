@@ -9,6 +9,7 @@ import {
   Query,
   Search,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -17,8 +18,10 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnautho
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 // @Public()
+@UseGuards(RolesGuard)
 @ApiTags('patients')
 @ApiBearerAuth('access-token')
 @Controller('patients')

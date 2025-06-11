@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Appointment } from 'src/appointments/entities/appointment.entity';
+import { Appointment, AStatus } from 'src/appointments/entities/appointment.entity';
 import { Repository } from 'typeorm';
 import { Doctor } from './entities/doctor.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Role, User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class DoctorsService {
@@ -26,8 +26,9 @@ export class DoctorsService {
   async create(createDoctorDto: CreateDoctorDto): Promise<Doctor> {
     const existingUser = await this.userRepository.findOneBy({
       id: createDoctorDto.user_id,
-    });
-
+      // status: Status., // Ensure the user is active
+      role: Role.DOCTOR, // Ensure the user is active and has doctor role
+    })
     if (!existingUser) {
       throw new NotFoundException(
         `doctor with ID ${createDoctorDto.user_id} not found`,

@@ -5,6 +5,7 @@ import { PatientSessionlog } from './entities/patient-sessionlog.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 import { CreatePatientSessionlogDto } from './dto/create-patient-sessionlog.dto';
 import { UpdatePatientSessionlogDto } from './dto/update-patient-sessionlog.dto';
+import { create } from 'domain';
 
 @Injectable()
 export class PatientSessionlogsService {
@@ -15,24 +16,39 @@ export class PatientSessionlogsService {
     private patientRepository: Repository<Patient>,
   ) {}
 
-  async create(
+  async logPatientSession(
     createPatientSessionlogDto: CreatePatientSessionlogDto,
-  ): Promise<PatientSessionlog> {
-    // Find the patient
-    const patient = await this.patientRepository.findOne({
+  ) {
+    const existingpatient = await this.patientRepository.findOne({
       where: { id: createPatientSessionlogDto.patient_id },
     });
-    if (!patient) {
+
+    if (!existingpatient) {
       throw new NotFoundException(
         `Patient with id ${createPatientSessionlogDto.patient_id} not found`,
       );
     }
 
-    // Create and save the session log
-    const newLog = this.patientSessionlogRepository.create({
-      patient: createPatientSessionlogDto.patient_id,
+    const sessionLog = this.patientSessionlogRepository.create({
+      login_time: new Date(createPatientSessionlogDto.login_time),
+      logout_time: new Date(createPatientSessionlogDto.logout_time),
+      patient: existingpatient.id,
     });
-    return this.patientSessionlogRepository.save(newLog);
+
+    const saved = await this.patientSessionlogRepository.save(sessionLog);
+    return saved.id;
+  }
+  async updateLogoutTime(sessionId: number) {
+    const session = await this.patientSessionlogRepository.findOne({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new NotFoundException(`Session with id ${sessionId} not found`);
+    }
+
+    session.logout_time = new Date(); // set logout to now
+    return this.patientSessionlogRepository.save(session);
   }
 
   async findAll(): Promise<PatientSessionlog[]> {

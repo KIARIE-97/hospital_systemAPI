@@ -20,16 +20,20 @@ import { PoliciesGuard } from 'src/casl/guards/policies.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('doctors')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 @Controller('doctors')
 export class DoctorsController {
   constructor(private readonly doctorsService: DoctorsService) {}
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Doctor'))
   @Post()
   create(@Body() createDoctorDto: CreateDoctorDto) {
     return this.doctorsService.create(createDoctorDto);
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Doctor'))
   @Post(':doctor_id/appointments/:appointment_id')
   addAppointmenttoDoctor(
     @Param('doctor_id', ParseIntPipe) doctor_id: number,
@@ -41,6 +45,8 @@ export class DoctorsController {
     );
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Doctor'))
   @Post(':doctor_id/appointment/:appointment_id')
   reassignAppointmentsToDoctor(
     @Param('doctor_id', ParseIntPipe) doctor_id: number,
@@ -66,6 +72,8 @@ export class DoctorsController {
     return this.doctorsService.findOne(id);
   }
 
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Doctor'))
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,

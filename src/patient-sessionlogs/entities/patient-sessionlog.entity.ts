@@ -8,14 +8,12 @@ export class PatientSessionlog {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp')
   login_time: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', { nullable: true })
   logout_time: Date;
 
   @ManyToOne(() => Patient, (patient) => patient.id, { nullable: true })
   patient: Patient['id'];
-
- 
 }

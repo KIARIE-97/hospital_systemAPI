@@ -2,18 +2,26 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { In, Repository } from 'typeorm';
-import { User } from 'src/users/entities/user.entity';
+import { Role, User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as Bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { PatientSessionlogsService } from 'src/patient-sessionlogs/patient-sessionlogs.service';
+import { PatientSessionlog } from 'src/patient-sessionlogs/entities/patient-sessionlog.entity';
+import { Patient } from 'src/patients/entities/patient.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(PatientSessionlog)
+      private patientSessionlogRepository: Repository<PatientSessionlog>,
+    @InjectRepository(Patient)
+      private patientRepository: Repository<Patient>,
     private jwtService: JwtService,
     private configService: ConfigService, // Assuming ConfigService is imported and configured
+    private patientSessionlogService: PatientSessionlogsService, // Inject PatientSessionlogsService
   ) {}
   private async hashData(data: string): Promise<string> {
     const salt = await Bcrypt.genSalt(10);
@@ -41,7 +49,7 @@ export class AuthService {
         {
           sub: user_id,
           email: email,
-          role: role
+          role: role,
         },
         {
           secret: this.configService.getOrThrow<string>(
@@ -86,6 +94,22 @@ export class AuthService {
         `wrong credentials for user with email ${createAuthDto.email}`,
       );
     }
+    if (founduser.role === Role.PATIENT) {
+      const patient = await this.patientRepository.findOne({
+        where: { user: { id: founduser.id } },
+        relations: ['user'],
+      });
+console.log('Patient found:', patient);
+      if (patient) {
+        const sessionLogData = {
+          patient_id: patient.id,
+          login_time: new Date(), // now
+          logout_time: new Date(),
+        };
+        await this.patientSessionlogService.logPatientSession(sessionLogData);
+        console.log('Patient session logged:', sessionLogData);
+      }
+    }
     // if the user is found and the password matches
     const { accessToken, refreshToken } = await this.getTokens(
       founduser.id,
@@ -118,7 +142,23 @@ export class AuthService {
     if (result.affected === 0) {
       throw new Error('Signout failed — no user was updated');
     }
+    const user = await this.userRepository.findOne({
+      where: { id: user_id },
+      relations: ['patient'], // Only needed if patient is a related entity
+    });
 
+    if (user?.role === Role.PATIENT) {
+      // Find the latest session for this patient
+      const latestSession = await this.patientSessionlogRepository.findOne({
+        where: { patient: user_id },
+        order: { login_time: 'DESC' },
+      });
+
+      if (latestSession) {
+        latestSession.logout_time = new Date();
+        await this.patientSessionlogRepository.save(latestSession);
+      }
+    }
     return { message: `User with id: ${user_id} signed out successfully ✔️` };
   }
   async refreshTokens(id: number, refreshToken: string) {
