@@ -18,6 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: configService.getOrThrow<boolean>('PG_SYNC', true),
         logging: configService.getOrThrow<boolean>('PG_LOGGING', false),
         migrations: [__dirname + '/../migrations//*{.ts,.js}'],
+        ssl: {rejectUnauthorized: false}, // Adjust based on your environment
       }),
       inject: [ConfigService],
     }),
