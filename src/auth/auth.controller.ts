@@ -81,6 +81,12 @@ export class AuthController {
     return this.authService.signOut(id);
   }
 
+  @Public() // This endpoint is accessible without authentication
+  @Post('signup')
+  create(@Body() createAuthDto: CreateAuthDto) {
+    return this.authService.SignUp(createAuthDto);
+  }
+
   @Public()
   @UseGuards(RtGuard)
   @Post('refresh')

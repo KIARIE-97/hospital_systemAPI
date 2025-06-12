@@ -20,22 +20,24 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/users/entities/user.entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
 
-UseGuards(RolesGuard)
+@UseGuards(RolesGuard)
 @ApiTags('session-logs')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 @Controller('patient-sessionlogs')
 export class PatientSessionlogsController {
   constructor(
     private readonly patientSessionlogsService: PatientSessionlogsService,
   ) {}
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Public()
   @Get()
   @ApiOperation({
     summary: 'Get all patient session logs',
     description: 'Retrieves a list of all patient session logs.',
   })
   findAll() {
+    console.log('patient session logs');
     return this.patientSessionlogsService.findAll();
   }
 

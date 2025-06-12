@@ -196,7 +196,7 @@ export class SeedService {
 
       const usedDoctorAppointmentPairs = new Set<string>();
 
-      if (role === Role.DOCTOR) {
+      if (role === Role.DOCTOR && status === UStatus.ACTIVE) {
         const doctor = new Doctor();
         doctor.specialty = faker.helpers.arrayElement([
           'Cardiology',
@@ -230,7 +230,7 @@ export class SeedService {
         doctors.push(savedDoctor);
       }
 
-      if (role === Role.PATIENT) {
+      if (role === Role.PATIENT && status === UStatus.ACTIVE) {
         const patient = new Patient();
         patient.dob = faker.date
           .birthdate({ mode: 'year', min: 1900, max: 2025 })

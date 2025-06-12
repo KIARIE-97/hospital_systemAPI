@@ -1,9 +1,29 @@
 
 services:
+  hospital_management-db:
+    image: postgres:15-alpine
+    container_name: hospital_management-db
+    restart: unless-stopped
+    environment:
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: "3797sarah"
+       POSTGRES_DB: hospital_management_db
+       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:8.0-alpine
-    container_name: myredis-cache
+    container_name: hospital_management-redis
     restart: unless-stopped
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-3797sara}
@@ -21,18 +41,24 @@ services:
       retries: 3
 
 
-  nestjs-app:
+  apihospital-management-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mynestjs-app
+    container_name: myhospital-app
     ports:
-      - "8000:8000"
+      - "3000:8000"
     environment:
       - NODE_ENV=development
       - PORT=8000
-      - DATABASE_URL='postgresql://hospitaldb_owner:npg_W1K0kvpwdMht@ep-soft-water-a8ilsnas-pooler.eastus2.azure.neon.tech/hospitaldb?sslmode=require'
-      - REDIS_URL= REDIS_URL=redis://:${REDIS_PASSWORD:-3797sara}@redis:6379
+      - PG_HOST=192.168.32.83
+      - PG_PORT=5433
+      - PG_USERNAME=postgres
+      - PG_PASSWORD=3797sarah           
+      - PG_DATABASE=hospital_management_db
+      - DB_SYNC=true
+      - DB_AUTOLOAD=true
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-3797sara}@hospital_management-redis:6379
       - JWT_ACCESS_TOKEN_SECRET=${JWT_ACCESS_TOKEN_SECRET:-secret}
       - JWT_ACCESS_TOKEN_EXPIRATION_TIME=${JWT_ACCESS_TOKEN_EXPIRATION_TIME:-15m}
       - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET:-secret}
@@ -41,7 +67,9 @@ services:
       - THROTTLE_LIMIT=${THROTTLE_LIMIT:-100}
     depends_on:   
        redis:
-        condition: service_healthy  
+        condition: service_healthy
+       hospital_management-db:
+        condition: service_healthy   
     networks:
       - app-network
     volumes:
@@ -51,6 +79,9 @@ volumes:
   redis-data:
     name: hospital-management-redis-data
     driver: local
+  pgdata:
+    name: hospital-management-pgdata
+    driver: local  
 
 networks: 
     app-network:

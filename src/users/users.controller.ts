@@ -40,6 +40,7 @@ export class UsersController {
   }
 
   @Roles(Role.ADMIN)
+  // @Public()
   @Get()
   @ApiOperation({
     summary: 'Get all users',

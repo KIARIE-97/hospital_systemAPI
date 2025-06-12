@@ -1,0 +1,24 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "sara",
+      "database": "hospital_management_db",
+      "username": "postgres"
+    },
+    {
+      "previewLimit": 50,
+      "server": "192.168.32.83",
+      "port": 5433,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "DOCKER",
+      "database": "hospital_management_db",
+      "username": "postgres"
+    }
+  ]
+}

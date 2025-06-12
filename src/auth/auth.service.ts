@@ -228,4 +228,38 @@ export class AuthService {
     //return the new tokens
     return { accessToken, refreshToken: newrefreshToken };
   }
+  async SignUp(createAuthDto: CreateAuthDto) {
+    // Check if user already exists
+    const existingUser = await this.userRepository.findOne({
+      where: { email: createAuthDto.email },
+      select: ['id', 'email', 'password'], // Select only necessary fields
+    });
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+    // hash password
+    const hashedPassword = await Bcrypt.hash(createAuthDto.password, 10);
+
+    // create and save new user
+    const user = this.userRepository.create({
+      ...createAuthDto,
+      password: hashedPassword,
+    });
+    // generate tokens
+    const savedUser = await this.userRepository.save(user);
+    const { accessToken, refreshToken } = await this.getTokens(
+      savedUser.id,
+      savedUser.email,
+      savedUser.role, // Assuming role is stored in the user entity
+    );
+        // Save refresh token in the database
+        await this.saveRefreshToken(savedUser.id, refreshToken);
+
+        // Return user and tokens
+        // Fetch updated user (with hashedRefreshToken)
+        const updatedUser = await this.userRepository.findOne({
+          where: { id: savedUser.id },
+        });
+        return { user: updatedUser, accessToken, refreshToken };
+  }
 }

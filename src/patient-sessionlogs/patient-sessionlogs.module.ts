@@ -5,6 +5,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PatientSessionlog } from './entities/patient-sessionlog.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { Patient } from 'src/patients/entities/patient.entity';
     TypeOrmModule.forFeature([PatientSessionlog, Patient]),
   ],
   controllers: [PatientSessionlogsController],
-  providers: [PatientSessionlogsService],
+  providers: [PatientSessionlogsService, RolesGuard],
 })
 export class PatientSessionlogsModule {}
