@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🏥 Hospital Management System API Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8f9fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #1976d2;
+      color: #fff;
+      padding: 2rem 1rem 1rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 0;
+      font-size: 1.2rem;
+      opacity: 0.95;
+    }
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      padding: 2rem 2.5rem;
+    }
+    h2 {
+      color: #1976d2;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e3e3e3;
+      padding-bottom: 0.3rem;
+    }
+    ul, ol {
+      margin-left: 1.5rem;
+    }
+    .tag {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1976d2;
+      border-radius: 4px;
+      padding: 0.2em 0.7em;
+      font-size: 0.95em;
+      margin-right: 0.5em;
+      margin-bottom: 0.2em;
+    }
+    .endpoint {
+      background: #f1f8e9;
+      border-left: 4px solid #388e3c;
+      padding: 0.7em 1em;
+      margin: 1em 0;
+      border-radius: 4px;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1em;
+      color: #333;
+    }
+    .note {
+      background: #fffde7;
+      border-left: 4px solid #fbc02d;
+      padding: 0.7em 1em;
+      margin: 1em 0;
+      border-radius: 4px;
+      font-size: 1em;
+      color: #7c6f00;
+    }
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.95em;
+      margin: 2rem 0 1rem 0;
+    }
+    @media (max-width: 600px) {
+      main { padding: 1rem; }
+      header { padding: 1.2rem 0.5rem 0.7rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏥 Hospital Management System API</h1>
+    <p>
+      A modern, secure REST API for managing healthcare operations.<br>
+      <span style="font-size:1.1em;">Role-based authentication, doctor-patient management, appointments, and more.</span>
+    </p>
+  </header>
+  <main>
+    <section>
+      <h2>🌟 Features Overview</h2>
+      <ul>
+        <li><b>Doctor Operations:</b> Profile management, appointment history, availability</li>
+        <li><b>Patient Services:</b> Registration, profile updates, appointment booking & tracking</li>
+        <li><b>Admin Dashboard:</b> Manage doctors, patients, appointments, contact queries, session logs</li>
+        <li><b>Authentication & Security:</b> JWT login, role-based access, session logs</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🔐 Authentication Guide</h2>
+      <ol>
+        <li>Send credentials to the <span class="tag">/auth/login</span> endpoint to receive a JWT token.</li>
+        <li>Use the token to access protected endpoints.</li>
+        <li>Need to refresh? Use the <span class="tag">/auth/refresh</span> endpoint to obtain a new access token.</li>
+      </ol>
+      <div class="note">
+        <b>Note:</b> All endpoints require <b>Content-Type: application/json</b> unless otherwise specified.
+      </div>
+    </section>
+
+    <section>
+      <h2>📚 More Info</h2>
+        <a href="/api" target="_blank"> Swagger documentation.</a>
+    </section>
+  </main>
+  <footer>
+    &copy; 2025 Hospital Management System API &mdash; Powered by NestJS
+  </footer>
+</body>
+</html>
