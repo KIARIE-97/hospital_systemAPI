@@ -8,9 +8,9 @@ import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
-      DatabaseModule,
-      TypeOrmModule.forFeature([DoctorSessionlog, Doctor]),
-    ],
+    DatabaseModule,
+    TypeOrmModule.forFeature([DoctorSessionlog, Doctor]),
+  ],
   controllers: [DoctorSessionlogsController],
   providers: [DoctorSessionlogsService],
 })

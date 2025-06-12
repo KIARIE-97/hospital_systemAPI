@@ -38,7 +38,7 @@ export class ContactQueriesService {
     });
 
     // Save to DB
-    return  this.contactQueryRepository.save(newQuery);
+    return this.contactQueryRepository.save(newQuery);
   }
 
   async findAll(): Promise<ContactQuery[]> {

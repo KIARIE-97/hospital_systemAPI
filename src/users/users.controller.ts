@@ -12,8 +12,14 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from './entities/user.entity';
@@ -33,8 +39,8 @@ export class UsersController {
     summary: 'Create a new user',
     description: 'Creates a new user with the provided details.',
   })
-   @ApiBadRequestResponse({ description: 'Invalid input data' })
-    @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

@@ -21,6 +21,4 @@ export class CreatePatientSessionlogDto {
   @IsNotEmpty()
   @IsDate()
   logout_time: Date;
-
-
 }

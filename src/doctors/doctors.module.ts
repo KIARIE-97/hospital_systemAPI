@@ -12,7 +12,7 @@ import { CaslModule } from 'src/casl/casl.module';
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([Doctor, Appointment, User]),
-    CaslModule
+    CaslModule,
   ],
   controllers: [DoctorsController],
   providers: [DoctorsService],

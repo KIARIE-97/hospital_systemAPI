@@ -1,12 +1,8 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {  Patient } from './entities/patient.entity';
+import { Patient } from './entities/patient.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Appointment } from 'src/appointments/entities/appointment.entity';
@@ -16,8 +12,6 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient) private patientRepository: Repository<Patient>,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Appointment)
-    private appointmentRepository: Repository<Appointment>,
   ) {}
 
   async create(createPatientDto: CreatePatientDto) {
@@ -41,12 +35,12 @@ export class PatientsService {
   }
   async findAll(): Promise<Patient[]> {
     console.log('Fetching all patients from patient service');
-  return await this.patientRepository
-    .createQueryBuilder('patient')
-    .leftJoinAndSelect('patient.user', 'user')
-    .leftJoinAndSelect('patient.appointment', 'appointment')
-    .getMany();
-}
+    return await this.patientRepository
+      .createQueryBuilder('patient')
+      .leftJoinAndSelect('patient.user', 'user')
+      .leftJoinAndSelect('patient.appointment', 'appointment')
+      .getMany();
+  }
 
   async searchPatient(search?: string) {
     if (search) {

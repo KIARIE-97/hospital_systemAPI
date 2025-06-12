@@ -1,18 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsDate,
-  IsOptional,
-  IsNumber,
-  IsEnum,
-  IsDateString,
-  IsEmail,
-  IsInt,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsEmail, IsInt } from 'class-validator';
 import { ContactStatus } from '../entities/contact-query.entity';
 export class CreateContactQueryDto {
- @ApiProperty()
+  @ApiProperty()
   @IsInt()
   patient_id: number;
 
@@ -22,7 +12,7 @@ export class CreateContactQueryDto {
 
   @ApiProperty({
     description: 'The email of the user',
-    example: 'example@gmail.com'
+    example: 'example@gmail.com',
   })
   @IsEmail()
   email: string;

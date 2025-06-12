@@ -9,8 +9,8 @@ export class AppMailerService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail', //  SMTP provider
       auth: {
-        user: process.env.GMAIL_USER, 
-        pass: process.env.GMAIL_PASS, 
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
   }
@@ -37,14 +37,13 @@ export class AppMailerService {
   }
 }
 
-  //with template
-  // async sendWelcomeMail(to: string, username: string) {
-  //   await this.mailerService.sendMail({
-  //     to,
-  //     subject: 'Welcome!',
-  //     template: 'welcome', // path to template file
-  //     context: { username },
-  //   });
-  //   console.log(`Welcome email sent to ${to}`);
-  // }
-
+//with template
+// async sendWelcomeMail(to: string, username: string) {
+//   await this.mailerService.sendMail({
+//     to,
+//     subject: 'Welcome!',
+//     template: 'welcome', // path to template file
+//     context: { username },
+//   });
+//   console.log(`Welcome email sent to ${to}`);
+// }

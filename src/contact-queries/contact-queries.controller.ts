@@ -12,11 +12,16 @@ import {
 import { ContactQueriesService } from './contact-queries.service';
 import { CreateContactQueryDto } from './dto/create-contact-query.dto';
 import { UpdateContactQueryDto } from './dto/update-contact-query.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
 import { PoliciesGuard } from 'src/casl/guards/policies.guard';
 import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator';
 import { Action } from 'src/casl/action.enum';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOAuth2, ApiOperation, ApiProperty, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @ApiTags('contact-queries')
 @ApiBearerAuth('access-token')
@@ -31,7 +36,7 @@ export class ContactQueriesController {
     description: 'Creates a new contact query with the provided details.',
   })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
-      @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   create(@Body() createContactQueryDto: CreateContactQueryDto) {
     return this.contactQueriesService.create(createContactQueryDto);
   }
@@ -54,7 +59,8 @@ export class ContactQueriesController {
   @Get('search/:query')
   @ApiOperation({
     summary: 'Search contact queries',
-    description: 'Searches for contact queries based on the provided query string.',
+    description:
+      'Searches for contact queries based on the provided query string.',
   })
   @ApiBadRequestResponse({ description: 'Invalid search query' })
   @ApiUnauthorizedResponse({ description: 'Authentication required' })
@@ -78,12 +84,12 @@ export class ContactQueriesController {
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability) => ability.can(Action.Update, 'Contactquery'))
   @Patch(':id')
-@ApiOperation({
+  @ApiOperation({
     summary: 'Update a contact query',
     description: 'Updates the details of an existing contact query.',
   })
-@ApiBadRequestResponse({ description: 'Invalid input data' })
-@ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateContactQueryDto: UpdateContactQueryDto,
@@ -94,10 +100,10 @@ export class ContactQueriesController {
   @UseGuards(PoliciesGuard)
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Contactquery'))
   @Delete(':id')
-@ApiOperation({
+  @ApiOperation({
     summary: 'Delete a contact query',
     description: 'Deletes a contact query by its unique ID.',
-  })  
+  })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.contactQueriesService.remove(id);
   }

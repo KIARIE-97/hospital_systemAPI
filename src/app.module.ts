@@ -13,18 +13,18 @@ import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
 import { LogsModule } from './logs/logs.module';
 import { AdminModule } from './admin/admin.module';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { CacheableMemory, Keyv } from 'cacheable';
-import { createKeyv } from '@keyv/redis';
+// import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+// import { CacheableMemory, Keyv } from 'cacheable';
+// import { createKeyv } from '@keyv/redis';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards';
 import { CaslModule } from './casl/casl.module';
-import { Throttle, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 // import { MailerModule } from './mailer/mailer.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
+// import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+// import { join } from 'path';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { join } from 'path';
     //   transport: {
     //     service: 'gmail', // SMTP provider
     //     auth: {
-    //       user: process.env.GMAIL_USER, 
+    //       user: process.env.GMAIL_USER,
     //       pass: process.env.GMAIL_PASS, //app password for Gmail
     //     },
     //   },
@@ -49,23 +49,23 @@ import { join } from 'path';
     //   },
     // }),
     // Global cache configuration
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      isGlobal: true, // Makes cache available globally
-      useFactory: (configService: ConfigService) => {
-        return {
-          stores: [
-            // Memory cache for fast local access
-            // new Keyv({
-            //   store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
-            // }),
-            // Redis cache for persistent storage
-            createKeyv(configService.getOrThrow<string>('REDIS_URL')),
-          ],
-        };
-      },
-    }),
+    // CacheModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   isGlobal: true, // Makes cache available globally
+    //   useFactory: (configService: ConfigService) => {
+    //     return {
+    //       stores: [
+    //         // Memory cache for fast local access
+    //         // new Keyv({
+    //         //   store: new CacheableMemory({ ttl: 30000, lruSize: 5000 }),
+    //         // }),
+    //         // Redis cache for persistent storage
+    //         createKeyv(configService.getOrThrow<string>('REDIS_URL')),
+    //       ],
+    //     };
+    //   },
+    // }),
     PatientsModule,
     DoctorsModule,
     AppointmentsModule,
@@ -103,10 +103,10 @@ import { join } from 'path';
   ],
   controllers: [],
   providers: [
-    {
-      provide: 'APP_INTERCEPTOR',
-      useClass: CacheInterceptor, // Global cache interceptor
-    },
+    // {
+    //   provide: 'APP_INTERCEPTOR',
+    //   useClass: CacheInterceptor, // Global cache interceptor
+    // },
     {
       provide: APP_GUARD,
       useClass: AtGuard, // Use AuthModule to provide global authentication guard

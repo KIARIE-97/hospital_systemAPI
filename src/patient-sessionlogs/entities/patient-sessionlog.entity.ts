@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+// import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
-import { ContactQuery } from 'src/contact-queries/entities/contact-query.entity';
+// import { ContactQuery } from 'src/contact-queries/entities/contact-query.entity';
 
 @Entity()
 export class PatientSessionlog {

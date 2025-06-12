@@ -1,6 +1,5 @@
-import { Action } from "../action.enum";
-import { AppAbility } from "../casl-ability.factory";
-
+import { Action } from '../action.enum';
+import { AppAbility } from '../casl-ability.factory';
 
 export class contactQueryPolicies {
   static canReadContactquery(ability: AppAbility): boolean {

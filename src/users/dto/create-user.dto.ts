@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 import { Role, UStatus } from '../entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -11,17 +11,18 @@ export class CreateUserDto {
   @IsString()
   last_name: string;
 
-  @ApiProperty( {description: 'The email of the user', 
-    example: 'example@mail.com', 
-    required: true 
+  @ApiProperty({
+    description: 'The email of the user',
+    example: 'example@mail.com',
+    required: true,
   })
   @IsEmail()
   email: string;
 
-  @ApiProperty(
-    {description: 'The unique identifier for the user', 
-    example: 123, 
-    required: true 
+  @ApiProperty({
+    description: 'The unique identifier for the user',
+    example: 123,
+    required: true,
   })
   @IsString()
   password: string;

@@ -1,9 +1,6 @@
 import {
   IsString,
-  IsNotEmpty,
-  IsDate,
   IsOptional,
-  IsNumber,
   IsDateString,
   IsEnum,
   IsInt,
@@ -31,7 +28,7 @@ export class CreateAppointmentDto {
   })
   status: AStatus = AStatus.PENDING;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
   @IsString()
   reason?: string; // Optional field for the reason of the appointment
 }

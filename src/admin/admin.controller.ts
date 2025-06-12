@@ -7,18 +7,18 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { CreateDoctorDto } from 'src/doctors/dto/create-doctor.dto';
-import { UpdateDoctorDto } from 'src/doctors/dto/update-doctor.dto';
-import { UpdatePatientDto } from 'src/patients/dto/update-patient.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Role } from 'src/users/entities/user.entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -37,7 +37,7 @@ export class AdminController {
     description: 'Creates a new admin with the provided details.',
   })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
-    @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }

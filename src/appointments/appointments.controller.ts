@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   Patch,
-  Query,
   ParseIntPipe,
   Req,
   UseGuards,
@@ -14,8 +13,13 @@ import {
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -44,7 +48,7 @@ export class AppointmentsController {
     description: 'Associates an appointment with a specific doctor.',
   })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
-    @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   addAppointmentTodoctor(
     @Param('appointment_id', ParseIntPipe) appointment_id: number,
     @Param('doctor_id', ParseIntPipe) doctor_id: number,

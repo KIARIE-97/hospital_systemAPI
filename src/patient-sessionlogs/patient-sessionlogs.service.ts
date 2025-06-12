@@ -4,8 +4,6 @@ import { Repository } from 'typeorm';
 import { PatientSessionlog } from './entities/patient-sessionlog.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 import { CreatePatientSessionlogDto } from './dto/create-patient-sessionlog.dto';
-import { UpdatePatientSessionlogDto } from './dto/update-patient-sessionlog.dto';
-import { create } from 'domain';
 
 @Injectable()
 export class PatientSessionlogsService {

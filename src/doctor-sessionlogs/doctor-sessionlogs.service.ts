@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { DoctorSessionlog } from './entities/doctor-sessionlog.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { CreateDoctorSessionlogDto } from './dto/create-doctor-sessionlog.dto';
-import { UpdateDoctorSessionlogDto } from './dto/update-doctor-sessionlog.dto';
 
 @Injectable()
 export class DoctorSessionlogsService {
@@ -15,9 +14,7 @@ export class DoctorSessionlogsService {
     private doctorRepository: Repository<Doctor>,
   ) {}
 
-  async logDoctorSession(
-    createDoctorSessionlogDto: CreateDoctorSessionlogDto,
-  ) {
+  async logDoctorSession(createDoctorSessionlogDto: CreateDoctorSessionlogDto) {
     const existingdoctor = await this.doctorRepository.findOne({
       where: { id: createDoctorSessionlogDto.doctor_id },
     });
@@ -37,7 +34,7 @@ export class DoctorSessionlogsService {
     const saved = await this.doctorSessionlogRepository.save(sessionLog);
     return saved.id;
   }
-async updateLogoutTime(sessionId: number) {
+  async updateLogoutTime(sessionId: number) {
     const session = await this.doctorSessionlogRepository.findOne({
       where: { id: sessionId },
     });

@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import * as Bcrypt from 'bcrypt';
 import { AppMailerService } from 'src/mailer/mailer.service';
 
-
 @Injectable()
 export class UsersService {
   constructor(

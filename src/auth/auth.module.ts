@@ -17,13 +17,25 @@ import { Doctor } from 'src/doctors/entities/doctor.entity';
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([User, PatientSessionlog, Patient, DoctorSessionlog, Doctor]),
+    TypeOrmModule.forFeature([
+      User,
+      PatientSessionlog,
+      Patient,
+      DoctorSessionlog,
+      Doctor,
+    ]),
     JwtModule.register({
       global: true,
     }),
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RtStrategy, PatientSessionlogsService, DoctorSessionlogsService],
+  providers: [
+    AuthService,
+    AtStrategy,
+    RtStrategy,
+    PatientSessionlogsService,
+    DoctorSessionlogsService,
+  ],
 })
 export class AuthModule {}

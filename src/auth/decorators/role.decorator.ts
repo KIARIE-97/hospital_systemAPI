@@ -1,7 +1,7 @@
 //adding someconstrains to route
 
-import { SetMetadata } from "@nestjs/common";
-import { Role } from "src/users/entities/user.entity";
+import { SetMetadata } from '@nestjs/common';
+import { Role } from 'src/users/entities/user.entity';
 
 //
 export const ROLES_KEY = 'roles';

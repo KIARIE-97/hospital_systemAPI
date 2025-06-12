@@ -12,7 +12,13 @@ import { PatientSessionlog } from 'src/patient-sessionlogs/entities/patient-sess
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([Patient, User, Appointment, ContactQuery, PatientSessionlog]),
+    TypeOrmModule.forFeature([
+      Patient,
+      User,
+      Appointment,
+      ContactQuery,
+      PatientSessionlog,
+    ]),
   ],
   controllers: [PatientsController],
   providers: [PatientsService],

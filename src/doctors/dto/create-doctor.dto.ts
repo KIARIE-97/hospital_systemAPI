@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsEmail,
-  IsNumber,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 export class CreateDoctorDto {
   @ApiProperty({
     description: 'The specialization of the doctor',

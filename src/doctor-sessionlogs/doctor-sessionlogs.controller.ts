@@ -1,9 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
   Delete,
   Query,
@@ -11,10 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DoctorSessionlogsService } from './doctor-sessionlogs.service';
-import { CreateDoctorSessionlogDto } from './dto/create-doctor-sessionlog.dto';
-import { UpdateDoctorSessionlogDto } from './dto/update-doctor-sessionlog.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -30,12 +30,12 @@ export class DoctorSessionlogsController {
 
   @Roles(Role.ADMIN)
   @Get()
-   @ApiOperation({
+  @ApiOperation({
     summary: 'Get all doctor session logs',
     description: 'Retrieves a list of all doctor session logs.',
-   })
-   @ApiBadRequestResponse({ description: 'Invalid input data' })
-     @ApiUnauthorizedResponse({ description: 'Authentication required' })
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  @ApiUnauthorizedResponse({ description: 'Authentication required' })
   findAll() {
     return this.doctorSessionlogsService.findAll();
   }

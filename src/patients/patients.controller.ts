@@ -7,15 +7,19 @@ import {
   Param,
   Delete,
   Query,
-  Search,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { Public } from 'src/auth/decorators/public.decorator';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Role } from 'src/users/entities/user.entity';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';

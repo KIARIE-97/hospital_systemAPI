@@ -1,19 +1,13 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
   Delete,
   Query,
   ParseIntPipe,
-  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { PatientSessionlogsService } from './patient-sessionlogs.service';
-import { CreatePatientSessionlogDto } from './dto/create-patient-sessionlog.dto';
-import { UpdatePatientSessionlogDto } from './dto/update-patient-sessionlog.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/roles.guard';

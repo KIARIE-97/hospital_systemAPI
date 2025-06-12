@@ -1,7 +1,7 @@
-import { Patient } from "src/patients/entities/patient.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Patient } from 'src/patients/entities/patient.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-export enum ContactStatus{
+export enum ContactStatus {
   PENDING = 'pending',
   RESPONDED = 'responded',
   CLOSED = 'closed',
@@ -27,6 +27,6 @@ export class ContactQuery {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   submitted_date: Date;
 
-  @ManyToOne(() => Patient, (patient) => patient.id, {nullable: true})
-    patient: Patient['id'];
+  @ManyToOne(() => Patient, (patient) => patient.id, { nullable: true })
+  patient: Patient['id'];
 }

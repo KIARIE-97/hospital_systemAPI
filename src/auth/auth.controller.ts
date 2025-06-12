@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Param,
@@ -12,11 +11,15 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Public } from './decorators/public.decorator';
-import { AtGuard } from './guards';
 import { RtGuard } from './guards/rf.guard';
-import { ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Roles } from './decorators/role.decorator';
 import { Role } from 'src/users/entities/user.entity';
 import { RolesGuard } from './guards/roles.guard';

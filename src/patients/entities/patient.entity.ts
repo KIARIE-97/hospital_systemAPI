@@ -50,6 +50,4 @@ export class Patient {
     nullable: true,
   })
   contactQuery: ContactQuery[];
-
-  
 }

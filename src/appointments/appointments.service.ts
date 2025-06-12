@@ -1,11 +1,15 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment, AStatus } from './entities/appointment.entity';
 import { Patient } from 'src/patients/entities/patient.entity';
 import { Repository } from 'typeorm';
-import { throwError } from 'rxjs';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
 import { Role, User } from 'src/users/entities/user.entity';
 
@@ -133,7 +137,7 @@ export class AppointmentsService {
       throw new NotFoundException('Appointment not found');
     }
 
-    const isAdmin = currentUser.role === Role.ADMIN;
+    // const isAdmin = currentUser.role === Role.ADMIN;
     const isPatient = currentUser.role === Role.PATIENT;
     const isDoctor = currentUser.role === Role.DOCTOR;
 

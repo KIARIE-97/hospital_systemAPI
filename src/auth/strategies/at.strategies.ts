@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Role } from 'src/users/entities/user.entity';
 
 //validate shortlived access tokens
- export type JWTPayload = {
+export type JWTPayload = {
   sub: number;
   email: string;
   role: Role;

@@ -3,7 +3,6 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
-
 @Injectable()
 export class AtGuard extends AuthGuard('jwt-at') {
   constructor(private readonly reflector: Reflector) {
@@ -17,9 +16,8 @@ export class AtGuard extends AuthGuard('jwt-at') {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) 
-      return true;
-    
+    if (isPublic) return true;
+
     return super.canActivate(context);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Appointment, AStatus } from 'src/appointments/entities/appointment.entity';
+import { Appointment } from 'src/appointments/entities/appointment.entity';
 import { Repository } from 'typeorm';
 import { Doctor } from './entities/doctor.entity';
 import { Role, User } from 'src/users/entities/user.entity';
@@ -28,7 +28,7 @@ export class DoctorsService {
       id: createDoctorDto.user_id,
       // status: Status., // Ensure the user is active
       role: Role.DOCTOR, // Ensure the user is active and has doctor role
-    })
+    });
     if (!existingUser) {
       throw new NotFoundException(
         `doctor with ID ${createDoctorDto.user_id} not found`,
@@ -116,11 +116,12 @@ export class DoctorsService {
     }
 
     //remove the appointment from the current doctor
-    doctor.appointment = doctor.appointment.filter(currentAppointment => currentAppointment.id !== appointment_id);
- await this.doctorRepository.save(doctor);
+    doctor.appointment = doctor.appointment.filter(
+      (currentAppointment) => currentAppointment.id !== appointment_id,
+    );
+    await this.doctorRepository.save(doctor);
     return doctor;
   }
-
 
   // async findAll(): Promise<Doctor[]> {
   //   return this.doctorRepository.find();
@@ -148,7 +149,7 @@ export class DoctorsService {
     await this.doctorRepository.update(id, updateDoctorDto);
     return await this.findOne(id);
   }
-//activate/deactivate a doctor
+  //activate/deactivate a doctor
   // async updateStatus(id: number, updateDoctorDto: UpdateDoctorDto) {
   //   const doctor = await this.doctorRepository.findOneBy({ id });
   //   if (!doctor) {
@@ -161,7 +162,7 @@ export class DoctorsService {
   //   // Save the updated doctor
   //   return await this.doctorRepository.save(doctor);
   // }
-  
+
   async remove(id: number): Promise<string> {
     return await this.doctorRepository
       .delete(id)

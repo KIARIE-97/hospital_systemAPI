@@ -3,9 +3,9 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Role, User } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { AppMailerService} from 'src/mailer/mailer.service';
+import { AppMailerService } from 'src/mailer/mailer.service';
 
 @Module({
   imports: [DatabaseModule, TypeOrmModule.forFeature([User])],

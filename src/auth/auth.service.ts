@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Role, User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as Bcrypt from 'bcrypt';
@@ -252,14 +251,14 @@ export class AuthService {
       savedUser.email,
       savedUser.role, // Assuming role is stored in the user entity
     );
-        // Save refresh token in the database
-        await this.saveRefreshToken(savedUser.id, refreshToken);
+    // Save refresh token in the database
+    await this.saveRefreshToken(savedUser.id, refreshToken);
 
-        // Return user and tokens
-        // Fetch updated user (with hashedRefreshToken)
-        const updatedUser = await this.userRepository.findOne({
-          where: { id: savedUser.id },
-        });
-        return { user: updatedUser, accessToken, refreshToken };
+    // Return user and tokens
+    // Fetch updated user (with hashedRefreshToken)
+    const updatedUser = await this.userRepository.findOne({
+      where: { id: savedUser.id },
+    });
+    return { user: updatedUser, accessToken, refreshToken };
   }
 }

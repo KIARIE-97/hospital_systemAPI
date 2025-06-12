@@ -59,10 +59,7 @@ export class AdminService {
     doctor_id: number,
     appointment_id: number,
   ): Promise<Doctor> {
-    return this.doctorService.addAppointmenttoDoctor(
-      doctor_id,
-      appointment_id,
-    ); // returns all doctors
+    return this.doctorService.addAppointmenttoDoctor(doctor_id, appointment_id); // returns all doctors
   }
 
   // Find all doctors with their associated user, appointment and filter by specialization
@@ -121,9 +118,8 @@ export class AdminService {
   ): Promise<Patient | string> {
     return this.patientService.update(id, updatePatientDto); // returns all patients
   }
-//
+  //
   // Reset password for a user
-  
 
   // Remove admin and (optionally) their user
   async remove(id: number): Promise<string> {

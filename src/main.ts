@@ -10,14 +10,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   //protects app from well-known vulnerabilities by setting various HTTP headers
-app.use(helmet())
+  app.use(helmet());
 
-app.enableCors({
-  origin: '*', // allow all origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Accept, Authorization',
-  credentials: true,
-});
+  app.enableCors({
+    origin: '*', // allow all origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  });
 
   app.useGlobalPipes(new ValidationPipe());
 
@@ -36,22 +36,22 @@ A modern and secure REST API for managing healthcare operations, designed to str
 This API empowers hospitals with endpoints to manage:
 
 🔹 **Doctor Operations**  
- • Profile management  
- • Appointment history & availability   
+ • Profile management  
+ • Appointment history & availability   
 
 🔹 **Patient Services**  
- • Registration & profile updates  
- • Appointment booking & tracking   
+ • Registration & profile updates  
+ • Appointment booking & tracking   
 
 🔹 **Admin Dashboard**  
- • Full oversight on doctors, patients, appointments  
- • Contact query handling  
- • Session log monitoring and reporting  
+ • Full oversight on doctors, patients, appointments  
+ • Contact query handling  
+ • Session log monitoring and reporting  
 
 🔹 **Authentication & Security**  
- • JWT-based login  
- • Role-based access control (Admin, Doctor, Patient)  
- • Session logs for login/logout activity  
+ • JWT-based login  
+ • Role-based access control (Admin, Doctor, Patient)  
+ • Session logs for login/logout activity  
 
 ---
 
@@ -125,8 +125,7 @@ This API uses **JWT Bearer tokens** to authenticate and authorize requests.
     .swagger-ui .response .response-headers { font-size: 14px; }
   `,
     customSiteTitle: 'HealthCare API Documentation',
-    customfavIcon:
-      '', 
+    customfavIcon: '',
   });
 
   const { httpAdapter } = app.get(HttpAdapterHost);
