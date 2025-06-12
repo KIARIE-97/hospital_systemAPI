@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "postbuild": "cp ./public/index.html ./dist/public/index.html",
+    "postbuild": "mkdir -p ./dist/public && cp ./public/index.html ./dist/public/index.html",
     "copy:templates": "cpx \"src/templates/**/*\" dist/src/templates",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
