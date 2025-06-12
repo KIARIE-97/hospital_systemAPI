@@ -80,7 +80,7 @@ import { join } from 'path';
     }),
     UsersModule,
     SeedModule,
-    LogsModule,
+    // LogsModule,
     AdminModule,
     AuthModule,
     CaslModule,

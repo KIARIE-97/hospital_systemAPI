@@ -1,0 +1,1 @@
+[2025-06-12T22:18:22.839Z] [::1] ERROR: User already exists - Path: /auth/signup
