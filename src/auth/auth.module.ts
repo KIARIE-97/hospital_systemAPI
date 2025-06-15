@@ -13,17 +13,31 @@ import { PatientSessionlogsService } from 'src/patient-sessionlogs/patient-sessi
 import { DoctorSessionlog } from 'src/doctor-sessionlogs/entities/doctor-sessionlog.entity';
 import { DoctorSessionlogsService } from 'src/doctor-sessionlogs/doctor-sessionlogs.service';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { AppMailerService } from 'src/mailer/mailer.service';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([User, PatientSessionlog, Patient, DoctorSessionlog, Doctor]),
+    TypeOrmModule.forFeature([
+      User,
+      PatientSessionlog,
+      Patient,
+      DoctorSessionlog,
+      Doctor,
+    ]),
     JwtModule.register({
       global: true,
     }),
     PassportModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, AtStrategy, RtStrategy, PatientSessionlogsService, DoctorSessionlogsService],
+  providers: [
+    AuthService,
+    AppMailerService,
+    AtStrategy,
+    RtStrategy,
+    PatientSessionlogsService,
+    DoctorSessionlogsService,
+  ],
 })
 export class AuthModule {}

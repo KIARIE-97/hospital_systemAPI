@@ -11,7 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
-import { LogsModule } from './logs/logs.module';
+// import { LogsModule } from './logs/logs.module';
 import { AdminModule } from './admin/admin.module';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { CacheableMemory, Keyv } from 'cacheable';
@@ -80,7 +80,7 @@ import { join } from 'path';
     }),
     UsersModule,
     SeedModule,
-    LogsModule,
+    // LogsModule,
     AdminModule,
     AuthModule,
     CaslModule,

@@ -12,6 +12,7 @@ import { PatientSessionlog } from 'src/patient-sessionlogs/entities/patient-sess
 import { Patient } from 'src/patients/entities/patient.entity';
 import { DoctorSessionlog } from 'src/doctor-sessionlogs/entities/doctor-sessionlog.entity';
 import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { AppMailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     @InjectRepository(DoctorSessionlog)
     private doctorSessionlogRepository: Repository<DoctorSessionlog>,
     private jwtService: JwtService,
+    private readonly appMailerService: AppMailerService,
     private configService: ConfigService, // Assuming ConfigService is imported and configured
     private patientSessionlogService: PatientSessionlogsService, // Inject PatientSessionlogsService
   ) {}
@@ -260,6 +262,14 @@ export class AuthService {
         const updatedUser = await this.userRepository.findOne({
           where: { id: savedUser.id },
         });
-        return { user: updatedUser, accessToken, refreshToken };
+        try {
+          await this.appMailerService.sendWelcomeMail(
+            savedUser.email,
+            savedUser.first_name,
+          );
+        } catch (err) {
+          console.error('Error sending welcome email:', err);
+        }
+        return { user: updatedUser, accessToken, refreshToken};
   }
 }

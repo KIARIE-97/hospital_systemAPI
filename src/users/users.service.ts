@@ -48,6 +48,7 @@ export class UsersService {
       status: createUserDto.status,
     };
     const savedUser = await this.userRepository.save(newUser);
+  
     return this.excludePassword(savedUser);
   }
 

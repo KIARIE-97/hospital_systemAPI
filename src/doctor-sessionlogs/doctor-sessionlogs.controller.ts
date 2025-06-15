@@ -21,7 +21,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @UseGuards(RolesGuard)
 @ApiTags('session-logs')
-@ApiBearerAuth()
+@ApiBearerAuth('access-token')
 @Controller('doctor-sessionlogs')
 export class DoctorSessionlogsController {
   constructor(

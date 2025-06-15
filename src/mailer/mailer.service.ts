@@ -9,8 +9,8 @@ export class AppMailerService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail', //  SMTP provider
       auth: {
-        user: process.env.GMAIL_USER, 
-        pass: process.env.GMAIL_PASS, 
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
   }
@@ -35,16 +35,26 @@ export class AppMailerService {
     });
     console.log(`Welcome email sent to ${to}`);
   }
-}
 
-  //with template
-  // async sendWelcomeMail(to: string, username: string) {
-  //   await this.mailerService.sendMail({
-  //     to,
-  //     subject: 'Welcome!',
-  //     template: 'welcome', // path to template file
-  //     context: { username },
-  //   });
-  //   console.log(`Welcome email sent to ${to}`);
-  // }
+  async sendWelcomeMail(to: string, username: string) {
+    const html = `<h1>Welcome, ${username}!</h1><p>Your account has been created successfully. Thank you for joining us!</p>`;
+    await this.transporter.sendMail({
+      from: `"No Reply" <${process.env.GMAIL_USER}>`,
+      to,
+      subject: 'Welcome to Hospital Management System!',
+      html,
+    });
+    console.log(`Welcome email sent to ${to}`);
+  }
+}
+//with template
+// async sendWelcomeMail(to: string, username: string) {
+//   await this.mailerService.sendMail({
+//     to,
+//     subject: 'Welcome!',
+//     template: 'welcome', // path to template file
+//     context: { username },
+//   });
+//   console.log(`Welcome email sent to ${to}`);
+// }
 
